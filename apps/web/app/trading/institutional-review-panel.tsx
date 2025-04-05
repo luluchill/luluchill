@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from "react"
 import {
   Wallet,
   TrendingUp,
@@ -11,9 +11,10 @@ import {
   ChevronLeft,
   ChevronRight,
   Search,
-  ArrowUpDown,
-} from 'lucide-react'
-import Image from 'next/image'
+  ArrowUpDown
+} from "lucide-react"
+import Image from "next/image"
+import { useAccount, useBlockNumber, useReadContracts } from "wagmi"
 type Property = {
   id: number
   name: string
@@ -33,6 +34,10 @@ type Property = {
   totalValue: number
 }
 import { ConnectWalletButton } from '@/components/connect-wallet-button'
+import { useReadContract } from 'wagmi'
+import { wagmiContractConfig } from "@/usdc.abi"
+import { luluchillRWAContractConfig } from "@/luluchillRWAToken.abi"
+
 
 export default function RWAPlatform() {
   const [walletConnected, setWalletConnected] = useState(false)
@@ -45,7 +50,29 @@ export default function RWAPlatform() {
   const [usdtAmount, setUsdtAmount] = useState(0)
   const [tokenQuantity, setTokenQuantity] = useState(0)
   const [showGainers, setShowGainers] = useState(true)
+  const { address, isConnected } = useAccount(); // 獲取當前錢包地址和連接狀態
 
+
+  const { data: usdcBalanceData } = useReadContract({
+    ...wagmiContractConfig,
+    functionName: "balanceOf",
+    args: [address as `0x${string}`],
+    query: {
+      enabled: !!address,
+    },
+  })
+
+  const { data: luluchillRWAToken } = useReadContract({
+    ...luluchillRWAContractConfig,
+    functionName: "balanceOf",
+    args: [address as `0x${string}`],
+    query: {
+      enabled: !!address,
+    },
+  })
+
+  const { data: blockNumber } = useBlockNumber({ watch: true })
+  
   const connectWallet = () => {
     setWalletConnected(true)
   }
@@ -221,7 +248,26 @@ export default function RWAPlatform() {
           <ConnectWalletButton />
         </div>
       </header>
+      <div className="container mx-auto px-4 py-6">
+        <h2 className="text-xl font-bold mb-4">USDC Balance</h2>
+        {isConnected ? (
+          <>
+            <p className="text-lg">
+              Balance: <span className="font-bold">{usdcBalanceData?.toString() || "Loading..."}</span>
+            </p>
+            <p className="text-lg">
+              BlockNumber: <span className="font-bold">{blockNumber?.toString() || "Loading..."}</span>
+            </p>
+            <p className="text-lg">
+              RWA Token: <span className="font-bold">{luluchillRWAToken?.toString() || "Loading..."}</span>
+            </p>
+          </>
 
+        ) : (
+          <p className="text-lg text-red-500">Please connect your wallet to view your USDC balance.</p>
+        )}
+      </div>
+      
       {/* Property Listings */}
       <div className="bg-secondary py-12">
         <div className="container mx-auto px-4">
@@ -330,6 +376,8 @@ export default function RWAPlatform() {
           </div>
         </div>
       </div>
+
+
 
       {/* Detail Modal */}
       {showModal && selectedProperty && (
