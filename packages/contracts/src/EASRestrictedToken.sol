@@ -126,6 +126,10 @@ contract EASRestrictedToken is ERC20, Ownable {
         
         revert("Recipient is not a validated liquidity pool");
     }
+
+    function mint(address to, uint256 amount) external onlyOwner {
+        _mint(to, amount);
+    }
     
     /**
      * @dev Check if address is a contract

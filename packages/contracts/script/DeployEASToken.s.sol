@@ -16,14 +16,14 @@ contract DeployEASTokenOnAmoy is Script {
     address public constant EAS_CONTRACT = 0xb101275a60d8bfb14529C421899aD7CA1Ae5B5Fc;
 
     // Deployed MockUSDC contract address
-    address public constant MOCK_USDC = 0xd4f68460516f0Cb8FeE57b4Ac979CCc0E24352bE;
+    address public constant MOCK_USDC = 0xd737545bE0FFcC4e3ACE1A9E664cA05e58F046f9;
     
     function run() public {
-        uint256 privateKey = vm.envUint("PRIVATE_KEY");
-        address deployer = vm.addr(privateKey);
+        uint256 institutionPrivateKey = vm.envUint("INSTITUTION_PRIVATE_KEY");
+        address deployer = vm.addr(institutionPrivateKey);
         console.log("Deployer address:", deployer);
         
-        vm.startBroadcast(privateKey);
+        vm.startBroadcast(institutionPrivateKey);
         
         // In actual deployment, you need to call SchemaRegistry.register first to get the schema UID
         // Schema UID for liquidity pool certification
@@ -51,8 +51,6 @@ contract DeployEASTokenOnAmoy is Script {
         
         // 4. Mint some paired tokens for the liquidity pool
         MockUSDC mockUsdc = MockUSDC(MOCK_USDC);
-        uint256 mintAmount = 1_000_000 * 10**6;
-        mockUsdc.mint(address(liquidityPool), mintAmount);
         restrictedToken.manuallyValidatePool(address(liquidityPool));
         
         // 5. Manually add some initial liquidity to the pool

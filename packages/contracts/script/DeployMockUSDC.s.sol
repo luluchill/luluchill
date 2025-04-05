@@ -11,7 +11,7 @@ import "../src/MockUSDC.sol";
 contract DeployMockUSDC is Script {
     function run() public {
         // Get private key from environment variables
-        uint256 privateKey = vm.envUint("PRIVATE_KEY");
+        uint256 privateKey = vm.envUint("INSTITUTION_PRIVATE_KEY");
         address deployer = vm.addr(privateKey);
         console.log("Deployer address:", deployer);
         
