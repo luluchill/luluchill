@@ -1,14 +1,11 @@
 "use client"
 
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useMemo } from "react"
 import dynamic from "next/dynamic"
 import { Shield } from "lucide-react"
 
 // Dynamically import the SelfQRcodeWrapper to avoid SSR issues
 const SelfQRcodeWrapper = dynamic(() => import("@selfxyz/qrcode").then((mod) => mod.default), { ssr: false })
-
-// Import the SelfAppBuilder class directly
-import { SelfAppBuilder, type SelfApp } from "@selfxyz/qrcode"
 
 interface SelfQrCodeComponentProps {
   userId: string | null
@@ -18,22 +15,18 @@ interface SelfQrCodeComponentProps {
 export function SelfQrCodeComponent({ userId, onSuccess }: SelfQrCodeComponentProps) {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [selfApp, setSelfApp] = useState<any>(null)
 
-  // Use a valid fallback address format
   const fallbackUserId = "0x0123456789abcdef0123456789abcdef01234567"
 
-  // Format and validate the userId
-  const formattedUserId = React.useMemo(() => {
-    // If no userId is provided, use the fallback
+  const formattedUserId = useMemo(() => {
     if (!userId) return fallbackUserId
 
-    // Ensure the address has the 0x prefix and is the correct length
     let address = userId.toLowerCase()
     if (!address.startsWith("0x")) {
       address = `0x${address}`
     }
 
-    // Validate the address format (simple check)
     const isValidAddress = /^0x[a-f0-9]{40}$/i.test(address)
     if (!isValidAddress) {
       console.error("Invalid Ethereum address format:", address)
@@ -43,40 +36,41 @@ export function SelfQrCodeComponent({ userId, onSuccess }: SelfQrCodeComponentPr
     return address
   }, [userId])
 
-  // Create the Self app configuration
-  const selfApp = React.useMemo(() => {
-    try {
-      return new SelfAppBuilder({
-        appName: "LuLuChill",
-        scope: "luluchill",
-        endpoint: "https://luluchill.vercel.app/api/self/verify",
-        endpointType: "staging_https",
-        logoBase64:
-          "https://upload.wikimedia.org/wikipedia/commons/f/f9/L_cursiva.gif",
-        userIdType: "hex",
-        userId: formattedUserId,
-        disclosures: {
-          passportNumber: true,
-          name: true,
-          minimumAge: 18,
-          nationality: true,
-          ofac: true,
-        },
-        devMode: true,
-      } as Partial<SelfApp>).build()
-    } catch (err) {
-      console.error("Error building Self app:", err)
-      setError((err as Error).message)
-      return null
+  useEffect(() => {
+    const buildSelfApp = async () => {
+      try {
+        const { SelfAppBuilder } = await import("@selfxyz/qrcode")
+        const app = new SelfAppBuilder({
+          appName: "LuLuChill",
+          scope: "luluchill",
+          endpoint: "https://luluchill.vercel.app/api/self/verify",
+          endpointType: "staging_https",
+          logoBase64: "https://upload.wikimedia.org/wikipedia/commons/f/f9/L_cursiva.gif",
+          userIdType: "hex",
+          userId: formattedUserId,
+          disclosures: {
+            passport_number: true,
+            name: true,
+            minimumAge: 18,
+            nationality: true,
+            ofac: true,
+          },
+          devMode: true,
+        }).build()
+        setSelfApp(app)
+      } catch (err) {
+        console.error("Error building Self app:", err)
+        setError((err as Error).message)
+      }
     }
+
+    buildSelfApp()
   }, [formattedUserId])
 
   useEffect(() => {
-    // Set loading to false after a short delay to ensure component is mounted
     const timer = setTimeout(() => {
       setIsLoading(false)
     }, 500)
-
     return () => clearTimeout(timer)
   }, [])
 
@@ -116,4 +110,3 @@ export function SelfQrCodeComponent({ userId, onSuccess }: SelfQrCodeComponentPr
     </div>
   )
 }
-
