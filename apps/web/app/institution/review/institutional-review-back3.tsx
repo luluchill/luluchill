@@ -16,7 +16,10 @@ import {
   Calendar,
   RefreshCw,
 } from 'lucide-react';
-
+import { EAS, SchemaEncoder } from "@ethereum-attestation-service/eas-sdk";
+const easContractAddress = "0xb101275a60d8bfb14529C421899aD7CA1Ae5B5Fc";
+const schemaUID = "0x66ceb27660877e18c3ed91f55b7a5aa9ba4d54aeb75c8a94a6df90aca219c4ca";
+import { useEthersSigner } from '../../../walletconnect-config'; // 使用自定義的 signer hook
 
 // 定義 User 型別
 type User = {
@@ -36,11 +39,33 @@ type User = {
 };
 
 export default function InstitutionalReviewBack() {
+  const [isLoading, setIsLoading] = useState(false); // 加入 loading state
+
   const { address, isConnected } = useAccount(); // 獲取當前錢包地址和連接狀態
   const { connect, connectors } = useConnect(); // 用於連接錢包
   const chainId = useChainId(); // 使用 useNetwork 取得 chain 資訊
   const router = useRouter();
   const institutionAddress = "0x941AE41b7e08001c02C910f72CA465B07435903C";
+
+  const callAttestApi = async (userId: number, attestationUid: string, chainId: string) => {
+    const res = await fetch(`/api/user/attest?chainId=${chainId}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id: userId,
+        attestationUid: attestationUid,
+      }),
+    });
+
+    if (!res.ok) {
+      const error = await res.json();
+      throw new Error(error?.error || "Failed to update attestation");
+    }
+
+    return await res.json();
+  };
 
   useEffect(() => {
     if (!isConnected || address !== institutionAddress) {
@@ -62,7 +87,13 @@ export default function InstitutionalReviewBack() {
   const itemsPerPage = 10
   const [customers, setCustomers] = useState<User[]>([]); // 從 API 獲取的使用者資料
   const [showApproveModal, setShowApproveModal] = useState(false);
-  const [customerToApprove, setCustomerToApprove] = useState<number | null>(null);
+  const [customerToApprove, setCustomerToApprove] = useState<User | null>(null);
+  
+  const signer = useEthersSigner(); // 使用自定義的 signer hook
+  useEffect(() => {
+    if (signer) {
+    }
+  }, [signer]);
 
   useEffect(() => {
     async function fetchCustomers() {
@@ -91,18 +122,44 @@ export default function InstitutionalReviewBack() {
   }, [selectedCustomer])
 
   // Handle approve
-  const handleApprove = (customerId) => {
-    // This is just simulating a frontend state change; in reality, you'd call an API
-    const updatedCustomers: User[] = customers.map((customer) => {
-      if (customer.id === customerId) {
-        return { ...customer, status: 'approved' };
-      }
-      return customer;
-    });
-    console.log(`Customer ${customerId} approved`);
-    setCustomers(updatedCustomers); // 更新狀態
-    setSelectedCustomer(null);
-    setShowApproveModal(false); // 關閉彈窗
+  const handleApprove = async (customer: User) => {
+    const eas = new EAS(easContractAddress);
+    if (signer) {
+
+      await eas.connect(signer);
+
+      // Initialize SchemaEncoder with the schema string
+      const schemaEncoder = new SchemaEncoder("bool KYC_VERIFIED");
+      const encodedData = schemaEncoder.encodeData([
+        { name: "KYC_VERIFIED", value: true, type: "bool" }
+      ]);
+
+      const tx = await eas.attest({
+        schema: schemaUID,
+        data: {
+          recipient: customer.ethAddress,
+          revocable: true, // Be aware that if your schema is not revocable, this MUST be false
+          data: encodedData,
+        },
+      });
+      const newAttestationUID = await tx.wait();
+
+      await callAttestApi(customer.id, newAttestationUID, chainId.toString());
+
+      const customerId = customer.id;
+      const updatedCustomers: User[] = customers.map((customer) => {
+        if (customer.id === customerId) {
+          return { ...customer, status: 'approved' };
+        }
+        return customer;
+      });
+      
+      setCustomers(updatedCustomers); // 更新狀態
+      setSelectedCustomer(null);
+      setShowApproveModal(false); // 關閉彈窗
+    } else {
+      console.error("Signer is undefined. Cannot connect to EAS.");
+    }
   };
 
 
@@ -452,7 +509,7 @@ export default function InstitutionalReviewBack() {
                               <button
                                 onClick={(e) => {
                                   e.stopPropagation();
-                                  setCustomerToApprove(customer.id); // 設定要批准的客戶 ID
+                                  setCustomerToApprove(customer); // 設定要批准的客戶 ID
                                   setShowApproveModal(true); // 顯示彈窗
                                 }}
                                 className="bg-green-100 text-green-800 px-2 py-1 rounded text-xs flex items-center"
@@ -546,7 +603,7 @@ export default function InstitutionalReviewBack() {
                         >
                           <path
                             fillRule="evenodd"
-                            d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                            d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 01-1.414 1.414l-4-4a1 1 010-1.414l4-4a1 1 011.414 0z"
                             clipRule="evenodd"
                           />
                         </svg>
@@ -587,7 +644,7 @@ export default function InstitutionalReviewBack() {
                         >
                           <path
                             fillRule="evenodd"
-                            d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                            d="M7.293 14.707a1 1 010-1.414L10.586 10 7.293 6.707a1 1 011.414-1.414l4 4a1 1 010 1.414l-4 4a1 1 01-1.414 0z"
                             clipRule="evenodd"
                           />
                         </svg>
@@ -687,7 +744,7 @@ export default function InstitutionalReviewBack() {
                                 strokeLinecap="round"
                                 strokeLinejoin="round"
                                 strokeWidth={2}
-                                d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+                                d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 012 2v2m-6 12h8a2 2 002-2v-8a2 2 00-2-2h-8a2 2 00-2 2v8a2 2 002 2z"
                               />
                             </svg>
                           </button>
@@ -742,7 +799,7 @@ export default function InstitutionalReviewBack() {
                         strokeLinecap="round"
                         strokeLinejoin="round"
                         strokeWidth={2}
-                        d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+                        d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
                       />
                     </svg>
                     Self Protocol Verification
@@ -762,7 +819,7 @@ export default function InstitutionalReviewBack() {
                             strokeLinecap="round"
                             strokeLinejoin="round"
                             strokeWidth={2}
-                            d="M15 9h3.75M15 12h3.75M15 15h3.75M4.5 19.5h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5zm6-10.125a1.875 1.875 0 11-3.75 0 1.875 1.875 0 013.75 0zm1.294 6.336a6.721 6.721 0 01-3.17.789 6.721 6.721 0 01-3.168-.789 3.376 3.376 0 016.338 0z"
+                            d="M15 9h3.75M15 12h3.75M15 15h3.75M4.5 19.5h15a2.25 2.25 002.25-2.25V6.75A2.25 2.25 0019.5 4.5h-15a2.25 2.25 00-2.25 2.25v10.5A2.25 2.25 004.5 19.5zm6-10.125a1.875 1.875 11-3.75 0 1.875 1.875 013.75 0zm1.294 6.336a6.721 6.721 01-3.17.789 6.721 6.721 01-3.168-.789 3.376 3.376 06.338 0z"
                           />
                         </svg>
                       </div>
@@ -815,7 +872,7 @@ export default function InstitutionalReviewBack() {
                           strokeLinecap="round"
                           strokeLinejoin="round"
                           strokeWidth={2}
-                          d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                          d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 011-18 0 019 9 0118 0z"
                         />
                       </svg>
                       <span>
@@ -852,7 +909,12 @@ export default function InstitutionalReviewBack() {
                   Cancel
                 </button>
                 <button
-                  onClick={() => customerToApprove && handleApprove(customerToApprove)}
+                  onClick={async () => {
+                    if (customerToApprove) {
+                      handleApprove(customerToApprove)
+                    } 
+                  }
+                }
                   className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
                 >
                   Confirm
