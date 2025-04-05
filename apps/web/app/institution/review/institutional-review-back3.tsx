@@ -1,8 +1,8 @@
 'use client'
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation'; // 使用 next/navigation 進行重定向
-import { useAccount, useConnect, useChainId } from 'wagmi'; // 使用 wagmi 來管理錢包
+import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation' // 使用 next/navigation 進行重定向
+import { useAccount, useConnect, useChainId } from 'wagmi' // 使用 wagmi 來管理錢包
 import {
   Wallet,
   UserCheck,
@@ -15,98 +15,106 @@ import {
   ChevronDown,
   Calendar,
   RefreshCw,
-} from 'lucide-react';
-import { EAS, SchemaEncoder } from "@ethereum-attestation-service/eas-sdk";
-const easContractAddress = "0xb101275a60d8bfb14529C421899aD7CA1Ae5B5Fc";
-const schemaUID = "0x66ceb27660877e18c3ed91f55b7a5aa9ba4d54aeb75c8a94a6df90aca219c4ca";
-import { useEthersSigner } from '../../../walletconnect-config'; // 使用自定義的 signer hook
+} from 'lucide-react'
+import { EAS, SchemaEncoder } from '@ethereum-attestation-service/eas-sdk'
+const easContractAddress = '0xb101275a60d8bfb14529C421899aD7CA1Ae5B5Fc'
+const schemaUID =
+  '0x66ceb27660877e18c3ed91f55b7a5aa9ba4d54aeb75c8a94a6df90aca219c4ca'
+import { useEthersSigner } from '../../../walletconnect-config' // 使用自定義的 signer hook
+import { ConnectWalletButton } from '@/components/connect-wallet-button'
 
 // 定義 User 型別
 type User = {
-  id: number;
-  createdAt: string;
-  ethAddress: string;
-  passportNumber: string;
-  firstName: string;
-  lastName: string;
-  olderThan: string;
-  nationality: string;
-  name: string;
-  passportNoOfac: boolean;
-  attestationUidPolygon?: string | null;
-  attestationUidHashkey?: string | null;
-  status: 'pending' | 'approved' | 'rejected';
-};
+  id: number
+  createdAt: string
+  ethAddress: string
+  passportNumber: string
+  firstName: string
+  lastName: string
+  olderThan: string
+  nationality: string
+  name: string
+  passportNoOfac: boolean
+  attestationUidPolygon?: string | null
+  attestationUidHashkey?: string | null
+  status: 'pending' | 'approved' | 'rejected'
+}
 
 export default function InstitutionalReviewBack() {
-  const [isLoading, setIsLoading] = useState(false); // 加入 loading state
+  const [isLoading, setIsLoading] = useState(false) // 加入 loading state
 
-  const { address, isConnected } = useAccount(); // 獲取當前錢包地址和連接狀態
-  const { connect, connectors } = useConnect(); // 用於連接錢包
-  const chainId = useChainId(); // 使用 useNetwork 取得 chain 資訊
-  const router = useRouter();
-  const institutionAddress = "0x941AE41b7e08001c02C910f72CA465B07435903C";
+  const { address, isConnected } = useAccount() // 獲取當前錢包地址和連接狀態
+  const { connect, connectors } = useConnect() // 用於連接錢包
+  const chainId = useChainId() // 使用 useNetwork 取得 chain 資訊
+  const router = useRouter()
+  const institutionAddress = '0x941AE41b7e08001c02C910f72CA465B07435903C'
 
-  const callAttestApi = async (userId: number, attestationUid: string, chainId: string) => {
+  const callAttestApi = async (
+    userId: number,
+    attestationUid: string,
+    chainId: string,
+  ) => {
     const res = await fetch(`/api/user/attest?chainId=${chainId}`, {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         id: userId,
         attestationUid: attestationUid,
       }),
-    });
+    })
 
     if (!res.ok) {
-      const error = await res.json();
-      throw new Error(error?.error || "Failed to update attestation");
+      const error = await res.json()
+      throw new Error(error?.error || 'Failed to update attestation')
     }
 
-    return await res.json();
-  };
+    return await res.json()
+  }
 
   useEffect(() => {
     if (!isConnected || address !== institutionAddress) {
-      router.push('/'); // 若未連接錢包或地址不符合，重定向到首頁
+      router.push('/') // 若未連接錢包或地址不符合，重定向到首頁
     }
-  }, [isConnected, address, router]);
+  }, [isConnected, address, router])
 
   useEffect(() => {
     // if (chainId !== 80001 && chainId !== 133) {
     //   router.push('/'); // 若 chainId 不符合，重定向到首頁
     // }
-  }, [chainId]);
+  }, [chainId])
 
   const [filterStatus, setFilterStatus] = useState('all')
   const [showFilters, setShowFilters] = useState(false)
-  const [selectedCustomer, setSelectedCustomer] = useState<User | null>(null); // 更新為 User | null
+  const [selectedCustomer, setSelectedCustomer] = useState<User | null>(null) // 更新為 User | null
   const [searchQuery, setSearchQuery] = useState('')
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 10
-  const [customers, setCustomers] = useState<User[]>([]); // 從 API 獲取的使用者資料
-  const [showApproveModal, setShowApproveModal] = useState(false);
-  const [customerToApprove, setCustomerToApprove] = useState<User | null>(null);
-  
-  const signer = useEthersSigner(); // 使用自定義的 signer hook
+  const [customers, setCustomers] = useState<User[]>([]) // 從 API 獲取的使用者資料
+  const [showApproveModal, setShowApproveModal] = useState(false)
+  const [customerToApprove, setCustomerToApprove] = useState<User | null>(null)
+
+  const signer = useEthersSigner() // 使用自定義的 signer hook
   useEffect(() => {
     if (signer) {
     }
-  }, [signer]);
+  }, [signer])
 
   useEffect(() => {
     async function fetchCustomers() {
       try {
-        const response = await fetch(`/api/user/list-no-attestation?chainId=${chainId}`);
-        const data = await response.json();
-        setCustomers(data); // 設定從 API 獲取的使用者資料
+        const response = await fetch(
+          `/api/user/list-no-attestation?chainId=${chainId}`,
+        )
+        const data = await response.json()
+        setCustomers(data) // 設定從 API 獲取的使用者資料
       } catch (error) {
-        console.error("Failed to fetch customers:", error);
+        console.error('Failed to fetch customers:', error)
       }
     }
-    fetchCustomers();
-  }, []);
+    fetchCustomers()
+  }, [])
 
   // Prevent scrolling when modal is open
   useEffect(() => {
@@ -123,16 +131,15 @@ export default function InstitutionalReviewBack() {
 
   // Handle approve
   const handleApprove = async (customer: User) => {
-    const eas = new EAS(easContractAddress);
+    const eas = new EAS(easContractAddress)
     if (signer) {
-
-      await eas.connect(signer);
+      await eas.connect(signer)
 
       // Initialize SchemaEncoder with the schema string
-      const schemaEncoder = new SchemaEncoder("bool KYC_VERIFIED");
+      const schemaEncoder = new SchemaEncoder('bool KYC_VERIFIED')
       const encodedData = schemaEncoder.encodeData([
-        { name: "KYC_VERIFIED", value: true, type: "bool" }
-      ]);
+        { name: 'KYC_VERIFIED', value: true, type: 'bool' },
+      ])
 
       const tx = await eas.attest({
         schema: schemaUID,
@@ -141,27 +148,26 @@ export default function InstitutionalReviewBack() {
           revocable: true, // Be aware that if your schema is not revocable, this MUST be false
           data: encodedData,
         },
-      });
-      const newAttestationUID = await tx.wait();
+      })
+      const newAttestationUID = await tx.wait()
 
-      await callAttestApi(customer.id, newAttestationUID, chainId.toString());
+      await callAttestApi(customer.id, newAttestationUID, chainId.toString())
 
-      const customerId = customer.id;
+      const customerId = customer.id
       const updatedCustomers: User[] = customers.map((customer) => {
         if (customer.id === customerId) {
-          return { ...customer, status: 'approved' };
+          return { ...customer, status: 'approved' }
         }
-        return customer;
-      });
-      
-      setCustomers(updatedCustomers); // 更新狀態
-      setSelectedCustomer(null);
-      setShowApproveModal(false); // 關閉彈窗
-    } else {
-      console.error("Signer is undefined. Cannot connect to EAS.");
-    }
-  };
+        return customer
+      })
 
+      setCustomers(updatedCustomers) // 更新狀態
+      setSelectedCustomer(null)
+      setShowApproveModal(false) // 關閉彈窗
+    } else {
+      console.error('Signer is undefined. Cannot connect to EAS.')
+    }
+  }
 
   // Filter customer list
   const filteredCustomers = customers.filter((customer) => {
@@ -187,7 +193,10 @@ export default function InstitutionalReviewBack() {
   const totalCount = customers.length
 
   return (
-    <div className="flex flex-col min-h-screen" style={{ backgroundColor: '#F5F2EA', color: '#2C2A25' }}>
+    <div
+      className="flex flex-col min-h-screen"
+      style={{ backgroundColor: '#F5F2EA', color: '#2C2A25' }}
+    >
       {/* Navigation Bar */}
       <header className="bg-[#2C2A25] text-white">
         <div className="container mx-auto flex items-center justify-between py-3 px-6">
@@ -201,27 +210,15 @@ export default function InstitutionalReviewBack() {
           </div>
 
           {/* Updated Wallet Connection */}
-          <div className="flex items-center space-x-4">
-            {isConnected ? (
-              <button className="flex items-center py-2 px-4 bg-[#D4C19C] text-[#2C2A25] hover:bg-[#C4B18B] transition-colors rounded-md">
-                <Wallet className="h-4 w-4 mr-2" />
-                <span>{address}</span>
-              </button>
-            ) : (
-              <button
-                onClick={() => connect({ connector: connectors[0] })} // 修正傳遞正確的參數
-                className="flex items-center py-2 px-4 bg-[#D4C19C] text-[#2C2A25] hover:bg-[#C4B18B] transition-colors rounded-md"
-              >
-                <Wallet className="h-4 w-4 mr-2" />
-                <span>Connect Wallet</span>
-              </button>
-            )}
-          </div>
+          <ConnectWalletButton />
         </div>
       </header>
 
       {/* Main Content */}
-      <div className="flex-1 py-6" style={{ backgroundColor: '#F5F2EA', color: '#2C2A25' }}>
+      <div
+        className="flex-1 py-6"
+        style={{ backgroundColor: '#F5F2EA', color: '#2C2A25' }}
+      >
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-6">
             <h1 className="text-2xl font-bold text-[#2C2A25] mb-4 md:mb-0">
@@ -439,7 +436,6 @@ export default function InstitutionalReviewBack() {
                           <span className="text-sm font-medium text-[#2C2A25]">
                             {customer.name}
                           </span>
-
                         </div>
                       </td>
                       <td className="py-3 px-4">
@@ -508,9 +504,9 @@ export default function InstitutionalReviewBack() {
                             <>
                               <button
                                 onClick={(e) => {
-                                  e.stopPropagation();
-                                  setCustomerToApprove(customer); // 設定要批准的客戶 ID
-                                  setShowApproveModal(true); // 顯示彈窗
+                                  e.stopPropagation()
+                                  setCustomerToApprove(customer) // 設定要批准的客戶 ID
+                                  setShowApproveModal(true) // 顯示彈窗
                                 }}
                                 className="bg-green-100 text-green-800 px-2 py-1 rounded text-xs flex items-center"
                               >
@@ -713,157 +709,100 @@ export default function InstitutionalReviewBack() {
                       </div>
                     </div>
 
-
-
                     <div className="flex">
                       <div className="w-1/3 text-gray-500">Wallet Address</div>
                       <div className="w-2/3 font-medium"></div>
-                        <div className="flex items-center">
-                          <span
-                            className="font-mono bg-gray-100 p-1 rounded text-xs truncate max-w-[200px] md:max-w-[280px]"
-                            title={selectedCustomer.ethAddress}
-                          >
+                      <div className="flex items-center">
+                        <span
+                          className="font-mono bg-gray-100 p-1 rounded text-xs truncate max-w-[200px] md:max-w-[280px]"
+                          title={selectedCustomer.ethAddress}
+                        >
                           {selectedCustomer.ethAddress}
-                          </span>
-                          <button
-                            className="ml-2 text-gray-400 hover:text-gray-600 flex-shrink-0"
-                            onClick={() =>
-                              navigator.clipboard.writeText(
-                                selectedCustomer.ethAddress,
-                              )
-                            }
+                        </span>
+                        <button
+                          className="ml-2 text-gray-400 hover:text-gray-600 flex-shrink-0"
+                          onClick={() =>
+                            navigator.clipboard.writeText(
+                              selectedCustomer.ethAddress,
+                            )
+                          }
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-4 w-4"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
                           >
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              className="h-4 w-4"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 012 2v2m-6 12h8a2 2 002-2v-8a2 2 00-2-2h-8a2 2 00-2 2v8a2 2 002 2z"
-                              />
-                            </svg>
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="flex">
-                      <div className="w-1/3 text-gray-500">
-                        Application Date
-                      </div>
-                      <div className="w-2/3 font-medium">
-                        {selectedCustomer.createdAt}
-                      </div>
-                    </div>
-
-                    <div className="flex">
-                      <div className="w-1/3 text-gray-500">Status</div>
-                      <div className="w-2/3">
-                        {selectedCustomer.status === 'pending' ? (
-                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800">
-                            <Clock className="h-3 w-3 mr-1" />
-                            Pending
-                          </span>
-                        ) : selectedCustomer.status === 'approved' ? (
-                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                            <CheckCircle className="h-3 w-3 mr-1" />
-                            Approved
-                          </span>
-                        ) : (
-                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                            <XCircle className="h-3 w-3 mr-1" />
-                            Rejected
-                          </span>
-                        )}
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 012 2v2m-6 12h8a2 2 002-2v-8a2 2 00-2-2h-8a2 2 00-2 2v8a2 2 002 2z"
+                            />
+                          </svg>
+                        </button>
                       </div>
                     </div>
                   </div>
-                </div>
 
-                {/* Self Protocol Verification - Right Side */}
-                <div>
-                  <h3 className="text-xl font-semibold text-[#2C2A25] mb-4 pb-2 border-b border-gray-200 flex items-center">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-5 w-5 mr-2 text-[#D4C19C]"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
-                      />
-                    </svg>
-                    Self Protocol Verification
-                  </h3>
+                  <div className="flex">
+                    <div className="w-1/3 text-gray-500">Application Date</div>
+                    <div className="w-2/3 font-medium">
+                      {selectedCustomer.createdAt}
+                    </div>
+                  </div>
 
-                  <div className="bg-[#F5F2EA] bg-opacity-60 rounded-lg p-4">
-                    <div className="flex items-center mb-4">
-                      <div className="h-10 w-10 rounded-full bg-[#D4C19C] flex items-center justify-center mr-3">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-6 w-6 text-white"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M15 9h3.75M15 12h3.75M15 15h3.75M4.5 19.5h15a2.25 2.25 002.25-2.25V6.75A2.25 2.25 0019.5 4.5h-15a2.25 2.25 00-2.25 2.25v10.5A2.25 2.25 004.5 19.5zm6-10.125a1.875 1.875 11-3.75 0 1.875 1.875 013.75 0zm1.294 6.336a6.721 6.721 01-3.17.789 6.721 6.721 01-3.168-.789 3.376 3.376 06.338 0z"
-                          />
-                        </svg>
-                      </div>
-                      <div>
-                        <p className="text-sm text-gray-500">Verified via</p>
-                        <p className="text-md font-medium text-[#2C2A25]">
-                          Passport
-                        </p>
-                      </div>
-                      <div className="ml-auto">
-                        <span className="bg-green-100 text-green-800 text-xs px-2.5 py-1 rounded-full flex items-center">
-                          <CheckCircle className="h-3 w-3 mr-1" />
-                          Verified
+                  <div className="flex">
+                    <div className="w-1/3 text-gray-500">Status</div>
+                    <div className="w-2/3">
+                      {selectedCustomer.status === 'pending' ? (
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800">
+                          <Clock className="h-3 w-3 mr-1" />
+                          Pending
                         </span>
-                      </div>
+                      ) : selectedCustomer.status === 'approved' ? (
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                          <CheckCircle className="h-3 w-3 mr-1" />
+                          Approved
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                          <XCircle className="h-3 w-3 mr-1" />
+                          Rejected
+                        </span>
+                      )}
                     </div>
+                  </div>
+                </div>
+              </div>
 
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="bg-white p-3 rounded-md">
-                        <p className="text-xs text-gray-500 mb-1">Full Name</p>
-                        <p className="text-sm font-medium">
-                          {selectedCustomer.name}
-                        </p>
-                      </div>
-                      <div className="bg-white p-3 rounded-md">
-                        <p className="text-xs text-gray-500 mb-1">
-                          Nationality
-                        </p>
-                        <p className="text-sm font-medium">Taiwan</p>
-                      </div>
-                      <div className="bg-white p-3 rounded-md">
-                        <p className="text-xs text-gray-500 mb-1">Age</p>
-                        <p className="text-sm font-medium">35</p>
-                      </div>
-                      <div className="bg-white p-3 rounded-md">
-                        <p className="text-xs text-gray-500 mb-1">Gender</p>
-                        <p className="text-sm font-medium">Male</p>
-                      </div>
-                    </div>
+              {/* Self Protocol Verification - Right Side */}
+              <div>
+                <h3 className="text-xl font-semibold text-[#2C2A25] mb-4 pb-2 border-b border-gray-200 flex items-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-5 w-5 mr-2 text-[#D4C19C]"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+                    />
+                  </svg>
+                  Self Protocol Verification
+                </h3>
 
-                    <div className="mt-4 text-xs text-gray-500 flex items-center">
+                <div className="bg-[#F5F2EA] bg-opacity-60 rounded-lg p-4">
+                  <div className="flex items-center mb-4">
+                    <div className="h-10 w-10 rounded-full bg-[#D4C19C] flex items-center justify-center mr-3">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
-                        className="h-4 w-4 mr-1 text-[#D4C19C]"
+                        className="h-6 w-6 text-white"
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke="currentColor"
@@ -872,18 +811,69 @@ export default function InstitutionalReviewBack() {
                           strokeLinecap="round"
                           strokeLinejoin="round"
                           strokeWidth={2}
-                          d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 011-18 0 019 9 0118 0z"
+                          d="M15 9h3.75M15 12h3.75M15 15h3.75M4.5 19.5h15a2.25 2.25 002.25-2.25V6.75A2.25 2.25 0019.5 4.5h-15a2.25 2.25 00-2.25 2.25v10.5A2.25 2.25 004.5 19.5zm6-10.125a1.875 1.875 11-3.75 0 1.875 1.875 013.75 0zm1.294 6.336a6.721 6.721 01-3.17.789 6.721 6.721 01-3.168-.789 3.376 3.376 06.338 0z"
                         />
                       </svg>
-                      <span>
-                        Verified on {selectedCustomer.createdAt} through
-                        Self Protocol
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-500">Verified via</p>
+                      <p className="text-md font-medium text-[#2C2A25]">
+                        Passport
+                      </p>
+                    </div>
+                    <div className="ml-auto">
+                      <span className="bg-green-100 text-green-800 text-xs px-2.5 py-1 rounded-full flex items-center">
+                        <CheckCircle className="h-3 w-3 mr-1" />
+                        Verified
                       </span>
                     </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="bg-white p-3 rounded-md">
+                      <p className="text-xs text-gray-500 mb-1">Full Name</p>
+                      <p className="text-sm font-medium">
+                        {selectedCustomer.name}
+                      </p>
+                    </div>
+                    <div className="bg-white p-3 rounded-md">
+                      <p className="text-xs text-gray-500 mb-1">Nationality</p>
+                      <p className="text-sm font-medium">Taiwan</p>
+                    </div>
+                    <div className="bg-white p-3 rounded-md">
+                      <p className="text-xs text-gray-500 mb-1">Age</p>
+                      <p className="text-sm font-medium">35</p>
+                    </div>
+                    <div className="bg-white p-3 rounded-md">
+                      <p className="text-xs text-gray-500 mb-1">Gender</p>
+                      <p className="text-sm font-medium">Male</p>
+                    </div>
+                  </div>
+
+                  <div className="mt-4 text-xs text-gray-500 flex items-center">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-4 w-4 mr-1 text-[#D4C19C]"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 011-18 0 019 9 0118 0z"
+                      />
+                    </svg>
+                    <span>
+                      Verified on {selectedCustomer.createdAt} through Self
+                      Protocol
+                    </span>
                   </div>
                 </div>
               </div>
             </div>
+          </div>
         </div>
       )}
 
@@ -912,9 +902,8 @@ export default function InstitutionalReviewBack() {
                   onClick={async () => {
                     if (customerToApprove) {
                       handleApprove(customerToApprove)
-                    } 
-                  }
-                }
+                    }
+                  }}
                   className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
                 >
                   Confirm
