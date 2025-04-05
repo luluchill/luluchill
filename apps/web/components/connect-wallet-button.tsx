@@ -1,9 +1,15 @@
-"use client"
+'use client'
 
-import { Button } from "@/components/ui/button"
-import { useWallet } from "@/components/wallet-provider"
-import { Wallet } from "lucide-react"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { Button } from '@/components/ui/button'
+import { useWallet } from '@/components/wallet-provider'
+import { Wallet } from 'lucide-react'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import NetworkDisplay from '@/components/NetworkDisplay'
 
 export function ConnectWalletButton() {
   const { isConnected, address, connect, disconnect } = useWallet()
@@ -18,6 +24,9 @@ export function ConnectWalletButton() {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
+          <div className="p-2 border-b">
+            <NetworkDisplay />
+          </div>
           <DropdownMenuItem onClick={disconnect}>Disconnect</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -31,4 +40,3 @@ export function ConnectWalletButton() {
     </Button>
   )
 }
-
