@@ -6,8 +6,8 @@ const prisma = new PrismaClient();
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const ethAddress = searchParams.get("ethAddress");
-
   const chainId = searchParams.get("chainId");
+
   if (!chainId) {
     return NextResponse.json(
       { error: "Missing chainId parameter" },

@@ -10,6 +10,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { SelfQrCodeComponent } from "@/components/self-qrcode-component"
 import Link from "next/link"
+import { useChainId } from "wagmi"
 
 export default function UserRegistration() {
   const { isConnected, address } = useWallet()
@@ -17,6 +18,8 @@ export default function UserRegistration() {
   const [proofSubmitted, setProofSubmitted] = useState(false)
   const [isQrModalOpen, setIsQrModalOpen] = useState(false)
   const [formattedAddress, setFormattedAddress] = useState<string | null>(null)
+  const [isEasIssued, setIsEasIssued] = useState(false)
+  const chainId = useChainId()
 
   // Format the address when it changes
   useEffect(() => {
@@ -41,6 +44,7 @@ export default function UserRegistration() {
     }
   }, [address])
 
+  // Check if the user is password verified
   useEffect(() => {
     if (currentStep === 2 && formattedAddress) {
       const checkUserExistence = async () => {
@@ -58,6 +62,32 @@ export default function UserRegistration() {
       checkUserExistence();
     }
   }, [currentStep, formattedAddress]);
+
+  // Check if the user is EAS issued
+  useEffect(() => {
+    if (currentStep === 3) {
+      const checkUserEasIssued = async () => {
+        try {
+
+          const response = await fetch(`/api/user/get-attestation-uid?chainId=${chainId}&ethAddress=${formattedAddress}`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          })
+
+          const data = await response.json();
+
+          if (data.attestationUid) {
+            setIsEasIssued(true);
+          }
+        } catch (error) {
+          console.error("Error checking user existence:", error);
+        }
+      };
+      checkUserEasIssued();
+    }
+  }, [currentStep, chainId, formattedAddress]);
 
   const handleVerify = () => {
     setIsQrModalOpen(true)
@@ -193,26 +223,46 @@ export default function UserRegistration() {
 
         {currentStep === 3 && (
           <>
-            <CardHeader>
-              <CardTitle>Waiting for Verification</CardTitle>
-              <CardDescription>Your proof has been submitted and is awaiting institution approval.</CardDescription>
-            </CardHeader>
             <CardContent className="py-8 flex flex-col items-center text-center">
-              <div className="rounded-full bg-amber-500/10 w-20 h-20 flex items-center justify-center mb-4">
-                <Clock className="h-10 w-10 text-amber-500" />
-              </div>
-              <h3 className="text-xl font-medium mb-2">Verification In Progress</h3>
-              <p className="text-muted-foreground max-w-md">
-                An institution will review your submission and issue an on-chain attestation. This process typically
-                takes 1-2 business days.
-              </p>
+              {isEasIssued ? (
+                <>
+                  <CardHeader>
+                    <CardTitle>Verification Complete</CardTitle>
+                  </CardHeader>
+                  <h3 className="text-xl font-medium mb-2"></h3>
+                  <p className="text-muted-foreground max-w-md">
+                    Your wallet has been successfully verified. You can now access all features.
+                  </p>
 
-              <div className="mt-8 w-full max-w-md p-4 border border-amber-500/20 bg-amber-500/5 rounded-lg flex items-center gap-3">
-                <Clock className="h-5 w-5 text-amber-500 flex-shrink-0" />
-                <p className="text-sm">
-                  <span className="font-medium text-amber-500">Status:</span> Waiting for institution approval
-                </p>
-              </div>
+                  <div className="mt-8 w-full max-w-md p-4 border border-green-500/20 bg-green-500/5 rounded-lg flex items-center gap-3">
+                    <CheckCircle2 className="h-5 w-5 text-green-500 flex-shrink-0" />
+                    <p className="text-sm">
+                      <span className="font-medium text-green-500">Status:</span> Verified
+                    </p>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <CardHeader>
+                    <CardTitle>Waiting for Verification</CardTitle>
+                    <CardDescription>Your proof has been submitted and is awaiting institution approval.</CardDescription>
+                  </CardHeader>
+                  <div className="rounded-full bg-amber-500/10 w-20 h-20 flex items-center justify-center mb-4">
+                    <Clock className="h-10 w-10 text-amber-500" />
+                  </div>
+                  <h3 className="text-xl font-medium mb-2">Verification In Progress</h3>
+                  <p className="text-muted-foreground max-w-md">
+                    An institution will review your submission and issue an on-chain attestation. This process typically
+                    takes 1-2 business days.
+                  </p>
+                  <div className="mt-8 w-full max-w-md p-4 border border-amber-500/20 bg-amber-500/5 rounded-lg flex items-center gap-3">
+                    <Clock className="h-5 w-5 text-amber-500 flex-shrink-0" />
+                    <p className="text-sm">
+                      <span className="font-medium text-amber-500">Status:</span> Waiting for institution approval
+                    </p>
+                  </div>
+                </>
+              )}
             </CardContent>
             <CardFooter>
               <Button variant="outline" className="w-full" asChild>
