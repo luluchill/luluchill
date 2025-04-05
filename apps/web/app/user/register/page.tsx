@@ -231,9 +231,6 @@ export default function UserRegistration() {
                 Download here
               </a>
             </p>
-            <Button onClick={handleQrScanned} className="w-full">
-              I&#39;ve Completed Verification
-            </Button>
           </div>
         </DialogContent>
       </Dialog>
