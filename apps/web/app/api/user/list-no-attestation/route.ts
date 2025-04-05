@@ -18,13 +18,7 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: "Invalid chainId" }, { status: 400 });
     }
 
-    const users = await prisma.user.findMany({
-      where: {
-        [chainId === "80002"
-          ? "attestationUidPolygon"
-          : "attestationUidHashkey"]: null, // 根據 chainId 過濾
-      },
-    });
+    const users = await prisma.user.findMany({});
 
     // 新增 status 欄位
     const usersWithStatus = users.map(user => ({
@@ -34,7 +28,7 @@ export async function GET(request: Request) {
         ? (user.attestationUidPolygon ? "approved" : "pending")
         : (user.attestationUidHashkey ? "approved" : "pending"),
     }));
-    console.log(usersWithStatus);
+
     return NextResponse.json(usersWithStatus); // 返回包含 status 的使用者
   } catch (error) {
     console.error(error);

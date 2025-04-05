@@ -47,6 +47,26 @@ export default function InstitutionalReviewBack() {
   const router = useRouter();
   const institutionAddress = "0x941AE41b7e08001c02C910f72CA465B07435903C";
 
+  const callAttestApi = async (userId: number, attestationUid: string, chainId: string) => {
+    const res = await fetch(`/api/user/attest?chainId=${chainId}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id: userId,
+        attestationUid: attestationUid,
+      }),
+    });
+
+    if (!res.ok) {
+      const error = await res.json();
+      throw new Error(error?.error || "Failed to update attestation");
+    }
+
+    return await res.json();
+  };
+
   useEffect(() => {
     if (!isConnected || address !== institutionAddress) {
       router.push('/'); // 若未連接錢包或地址不符合，重定向到首頁
@@ -123,9 +143,9 @@ export default function InstitutionalReviewBack() {
         },
       });
       const newAttestationUID = await tx.wait();
-      console.log("New attestation UID:", newAttestationUID);
-      // 0x457561318d949d56b51763187809929b2152239b2143da55f6bd84d2fe50c16e
-      
+
+      await callAttestApi(customer.id, newAttestationUID, chainId.toString());
+
       const customerId = customer.id;
       const updatedCustomers: User[] = customers.map((customer) => {
         if (customer.id === customerId) {
