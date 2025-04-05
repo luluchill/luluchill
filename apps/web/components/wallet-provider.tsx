@@ -16,9 +16,9 @@ export function WalletProvider({ children }: { children: ReactNode }) {
   const [address, setAddress] = useState<string | null>(null)
 
   const connect = () => {
-    // Mock wallet connection
+    // Mock wallet connection with a properly formatted Ethereum address
     setIsConnected(true)
-    setAddress("0x1234...5678")
+    setAddress("0x0123456789abcdef0123456789abcdef01234567")
   }
 
   const disconnect = () => {

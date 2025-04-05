@@ -9,7 +9,7 @@ function Playground() {
   const selfApp = new SelfAppBuilder({
     appName: "LuLuChill",
     scope: "luluchill",
-    endpoint: "https://luluchill.vecel.app/api/self/verify",
+    endpoint: "http://luluchill.kth.tw/api/self/verify",
     endpointType: "staging_https",
     logoBase64:
       "https://upload.wikimedia.org/wikipedia/commons/f/f9/L_cursiva.gif",

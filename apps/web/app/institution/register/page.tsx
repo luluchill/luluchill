@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { CheckCircle2, Building, ArrowRight } from "lucide-react"
+import Link from "next/link"
 
 export default function InstitutionRegister() {
   const [step, setStep] = useState(1)
@@ -122,7 +123,10 @@ export default function InstitutionRegister() {
                 />
               </div>
             </CardContent>
-            <CardFooter className="flex justify-end">
+            <CardFooter className="flex justify-between">
+              <Button variant="outline" asChild>
+                <Link href="/">Back</Link>
+              </Button>
               <Button onClick={() => setStep(2)} className="gap-2">
                 Next Step
                 <ArrowRight className="h-4 w-4" />
