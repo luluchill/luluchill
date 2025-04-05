@@ -70,7 +70,7 @@ export const hashKeyChainTestnet = defineChain({
   },
   rpcUrls: {
     default: {
-      http: ["https://hashkeychain-testnet.alt.technology"],
+      http: ["https://hashKeychain-testnet.alt.technology"],
     },
   },
   blockExplorers: {
@@ -106,7 +106,7 @@ export const polygonAmoy = defineChain({
 
 export const networks = [hashKeyChainTestnet, polygonAmoy];
 
-//Set up the Wagmi Adapter (Config)
+// Set up the Wagmi Adapter (Config)
 export const wagmiAdapter = new WagmiAdapter({
   storage: createStorage({
     storage: cookieStorage,
@@ -114,6 +114,11 @@ export const wagmiAdapter = new WagmiAdapter({
   ssr: true,
   projectId,
   networks,
+
+  transports: {
+    [polygonAmoy.id]: http('https://rpc-amoy.polygon.technology/'),
+    [hashKeyChainTestnet.id]: http('https://hashKeychain-testnet.alt.technology'),
+  },
 });
 
 export const config = wagmiAdapter.wagmiConfig;
