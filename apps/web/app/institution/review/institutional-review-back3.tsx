@@ -61,6 +61,8 @@ export default function InstitutionalReviewBack() {
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 10
   const [customers, setCustomers] = useState<User[]>([]); // 從 API 獲取的使用者資料
+  const [showApproveModal, setShowApproveModal] = useState(false);
+  const [customerToApprove, setCustomerToApprove] = useState<number | null>(null);
 
   useEffect(() => {
     async function fetchCustomers() {
@@ -91,16 +93,17 @@ export default function InstitutionalReviewBack() {
   // Handle approve
   const handleApprove = (customerId) => {
     // This is just simulating a frontend state change; in reality, you'd call an API
-    const updatedCustomers = customers.map((customer) => {
+    const updatedCustomers: User[] = customers.map((customer) => {
       if (customer.id === customerId) {
-        return { ...customer, status: 'approved' }
+        return { ...customer, status: 'approved' };
       }
-      return customer
-    })
-    // In a real application, you'd send an API request here, then update the state
-    console.log(`Customer ${customerId} approved`)
-    setSelectedCustomer(null)
-  }
+      return customer;
+    });
+    console.log(`Customer ${customerId} approved`);
+    setCustomers(updatedCustomers); // 更新狀態
+    setSelectedCustomer(null);
+    setShowApproveModal(false); // 關閉彈窗
+  };
 
   // Handle reject
   const handleReject = (customerId) => {
@@ -405,9 +408,7 @@ export default function InstitutionalReviewBack() {
                             className="ml-2 text-gray-400 hover:text-gray-600"
                             onClick={(e) => {
                               e.stopPropagation()
-                              navigator.clipboard.writeText(
-                                customer.ethAddress,
-                              )
+                              navigator.clipboard.writeText(customer.ethAddress)
                             }}
                           >
                             <svg
@@ -463,23 +464,14 @@ export default function InstitutionalReviewBack() {
                             <>
                               <button
                                 onClick={(e) => {
-                                  e.stopPropagation()
-                                  handleApprove(customer.id)
+                                  e.stopPropagation();
+                                  setCustomerToApprove(customer.id); // 設定要批准的客戶 ID
+                                  setShowApproveModal(true); // 顯示彈窗
                                 }}
                                 className="bg-green-100 text-green-800 px-2 py-1 rounded text-xs flex items-center"
                               >
                                 <UserCheck className="h-3 w-3 mr-1" />
                                 Approve
-                              </button>
-                              <button
-                                onClick={(e) => {
-                                  e.stopPropagation()
-                                  handleReject(customer.id)
-                                }}
-                                className="bg-red-100 text-red-800 px-2 py-1 rounded text-xs flex items-center"
-                              >
-                                <UserX className="h-3 w-3 mr-1" />
-                                Reject
                               </button>
                             </>
                           )}
@@ -848,48 +840,39 @@ export default function InstitutionalReviewBack() {
                 </div>
               </div>
             </div>
+        </div>
+      )}
 
-            {/* Footer */}
-            <div className="bg-gray-50 px-6 py-4 border-t border-gray-200 flex justify-between">
-              {selectedCustomer.status === 'pending' ? (
-                <>
-                  <button
-                    onClick={() => setSelectedCustomer(null)}
-                    className="py-2 px-4 border border-[#D4C19C] rounded-md text-[#2C2A25] hover:bg-[#F5F2EA] transition-colors"
-                  >
-                    Close
-                  </button>
-                  <div className="flex space-x-3">
-                    <button
-                      onClick={() => handleReject(selectedCustomer.id)}
-                      className="py-2 px-4 border border-red-300 bg-red-50 rounded-md text-red-700 hover:bg-red-100 transition-colors flex items-center"
-                    >
-                      <UserX className="h-4 w-4 mr-2" />
-                      Reject Application
-                    </button>
-                    <button
-                      onClick={() => handleApprove(selectedCustomer.id)}
-                      className="py-2 px-4 bg-[#2C2A25] rounded-md text-white hover:bg-[#3A382F] transition-colors flex items-center"
-                    >
-                      <UserCheck className="h-4 w-4 mr-2" />
-                      Approve Application
-                    </button>
-                  </div>
-                </>
-              ) : (
-                <>
-                  <button
-                    onClick={() => setSelectedCustomer(null)}
-                    className="py-2 px-4 border border-[#D4C19C] rounded-md text-[#2C2A25] hover:bg-[#F5F2EA] transition-colors"
-                  >
-                    Close
-                  </button>
-                  <button className="py-2 px-4 bg-[#2C2A25] rounded-md text-white hover:bg-[#3A382F] transition-colors">
-                    Edit Customer Information
-                  </button>
-                </>
-              )}
+      {showApproveModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+          <div
+            className="absolute inset-0 bg-black bg-opacity-70"
+            onClick={() => setShowApproveModal(false)}
+          ></div>
+          <div className="relative bg-white rounded-lg overflow-hidden w-full max-w-md mx-4">
+            <div className="p-6">
+              <h2 className="text-lg font-semibold text-[#2C2A25] mb-4">
+                Confirm Approval
+              </h2>
+              <p className="text-sm text-gray-500 mb-6">
+                Are you sure you want to approve this customer?
+              </p>
+              <div className="flex justify-end space-x-4">
+                <button
+                  onClick={() => setShowApproveModal(false)}
+                  className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={() => customerToApprove && handleApprove(customerToApprove)}
+                  className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+                >
+                  Confirm
+                </button>
+              </div>
             </div>
+          </div>
         </div>
       )}
     </div>
