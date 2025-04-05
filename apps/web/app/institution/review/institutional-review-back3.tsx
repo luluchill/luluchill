@@ -15,8 +15,10 @@ import {
   RefreshCw,
 } from 'lucide-react'
 
+import { useWallet } from "@/components/wallet-provider"  // 假設 wallet-provider 是您專案中的錢包提供者
+
 export default function InstitutionalReviewBack() {
-  const [walletConnected, setWalletConnected] = useState(true)
+  const { isConnected, connect, address } = useWallet() // 使用 wallet-provider 提供的功能
   const [filterStatus, setFilterStatus] = useState('all')
   const [showFilters, setShowFilters] = useState(false)
   const [selectedCustomer, setSelectedCustomer] = useState<{
@@ -33,9 +35,6 @@ export default function InstitutionalReviewBack() {
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 10
 
-
-
-  
   // Prevent scrolling when modal is open
   useEffect(() => {
     if (selectedCustomer) {
@@ -48,10 +47,6 @@ export default function InstitutionalReviewBack() {
       document.body.style.overflow = 'unset'
     }
   }, [selectedCustomer])
-
-  const connectWallet = () => {
-    setWalletConnected(true)
-  }
 
   // Customer data for review
   const customers = [
@@ -261,16 +256,16 @@ export default function InstitutionalReviewBack() {
             </span>
           </div>
 
-          {/* Simplified Navigation */}
+          {/* Updated Wallet Connection */}
           <div className="flex items-center space-x-4">
-            {walletConnected ? (
+            {isConnected ? (
               <button className="flex items-center py-2 px-4 bg-[#D4C19C] text-[#2C2A25] hover:bg-[#C4B18B] transition-colors rounded-md">
                 <Wallet className="h-4 w-4 mr-2" />
-                <span>0x12...34AB (Institution)</span>
+                <span>{address}</span>
               </button>
             ) : (
               <button
-                onClick={connectWallet}
+                onClick={connect}
                 className="flex items-center py-2 px-4 bg-[#D4C19C] text-[#2C2A25] hover:bg-[#C4B18B] transition-colors rounded-md"
               >
                 <Wallet className="h-4 w-4 mr-2" />
@@ -718,7 +713,7 @@ export default function InstitutionalReviewBack() {
                         >
                           <path
                             fillRule="evenodd"
-                            d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                            d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
                             clipRule="evenodd"
                           />
                         </svg>
@@ -796,7 +791,7 @@ export default function InstitutionalReviewBack() {
 
                     <div className="flex">
                       <div className="w-1/3 text-gray-500">Wallet Address</div>
-                      <div className="w-2/3 font-medium">
+                      <div className="w-2/3 font-medium"></div>
                         <div className="flex items-center">
                           <span
                             className="font-mono bg-gray-100 p-1 rounded text-xs truncate max-w-[200px] md:max-w-[280px]"
@@ -1005,7 +1000,6 @@ export default function InstitutionalReviewBack() {
                 </>
               )}
             </div>
-          </div>
         </div>
       )}
     </div>
