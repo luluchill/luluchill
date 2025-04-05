@@ -1,6 +1,6 @@
-'use client'
-
-import { useState } from 'react'
+"use client"
+import {ethers} from "ethers"
+import { useEffect, useState } from "react"
 import {
   Wallet,
   TrendingUp,
@@ -11,9 +11,10 @@ import {
   ChevronLeft,
   ChevronRight,
   Search,
-  ArrowUpDown,
-} from 'lucide-react'
-import Image from 'next/image'
+  ArrowUpDown
+} from "lucide-react"
+import Image from "next/image"
+import { useAccount, useBlockNumber, useReadContracts, useWriteContract } from "wagmi"
 type Property = {
   id: number
   name: string
@@ -33,6 +34,10 @@ type Property = {
   totalValue: number
 }
 import { ConnectWalletButton } from '@/components/connect-wallet-button'
+import { useReadContract } from 'wagmi'
+import { wagmiContractConfig } from "@/usdc.abi"
+import { luluchillRWAContractConfig } from "@/luluchillRWAToken.abi"
+import { poolContractConfig } from "@/pool.abi"
 
 export default function RWAPlatform() {
   const [walletConnected, setWalletConnected] = useState(false)
@@ -42,10 +47,42 @@ export default function RWAPlatform() {
   )
 
   const [currentSlide, setCurrentSlide] = useState(0)
+
   const [usdtAmount, setUsdtAmount] = useState(0)
   const [tokenQuantity, setTokenQuantity] = useState(0)
-  const [showGainers, setShowGainers] = useState(true)
 
+  const [showGainers, setShowGainers] = useState(true)
+  const { address, isConnected } = useAccount(); // 獲取當前錢包地址和連接狀態
+
+
+  const { data: hash, writeContract } = useWriteContract()
+
+
+
+  const { data: usdcBalanceData } = useReadContract({
+    ...wagmiContractConfig,
+    functionName: "balanceOf",
+    args: [address as `0x${string}`],
+    query: {
+      enabled: !!address,
+    },
+  })
+
+  const formattedUsdcBalance = usdcBalanceData
+    ? (Number(usdcBalanceData.toString()) / 1e6).toFixed(2)
+    : "Loading..."
+
+  const { data: luluchillRWAToken } = useReadContract({
+    ...luluchillRWAContractConfig,
+    functionName: "balanceOf",
+    args: [address as `0x${string}`],
+    query: {
+      enabled: !!address,
+    },
+  })
+
+  const { data: blockNumber } = useBlockNumber({ watch: true })
+  
   const connectWallet = () => {
     setWalletConnected(true)
   }
@@ -74,16 +111,16 @@ export default function RWAPlatform() {
   const properties = [
     {
       id: 1,
-      name: 'Brand New Townhouse in Toufen',
-      abbr: 'TREG-MTC',
-      agency: 'TREG',
+      name: "Brand New Townhouse in Toufen",
+      abbr: "LULUCHILLRWA",
+      agency: "LLCRWA",
       location: {
         county: 'Miaoli County',
         township: 'Toufen Township',
       },
-      landArea: '38.78 Acre',
-      landType: 'Residential',
-      contract: '0x7a58c0Be72BE218B41C608b7Fe7C5bB630736C71',
+      landArea: "38.78 Acre",
+      landType: "Residential",
+      contract: "0x3c01c27726BA247a708aB15C0A9430648202773E",
       tokenPrice: 120,
       priceChange: '+5.2%',
       trending: 'up',
@@ -144,7 +181,7 @@ export default function RWAPlatform() {
       totalTokens: 100,
       totalValue: 1155,
     },
-  ]
+  ] as Property[]
 
   // Create empty placeholder rows if needed to always have 5 rows
   const createPlaceholderRows = (count) => {
@@ -221,7 +258,26 @@ export default function RWAPlatform() {
           <ConnectWalletButton />
         </div>
       </header>
+      <div className="container mx-auto px-4 py-6">
+        <h2 className="text-xl font-bold mb-4">USDC Balance</h2>
+        {isConnected ? (
+          <>
+            <p className="text-lg">
+              Balance: <span className="font-bold">{formattedUsdcBalance} USDC</span>
+            </p>
+            <p className="text-lg">
+              BlockNumber: <span className="font-bold">{blockNumber?.toString() || "Loading..."}</span>
+            </p>
+            <p className="text-lg">
+              RWA Token: <span className="font-bold">{luluchillRWAToken?.toString() || "Loading..."}</span>
+            </p>
+          </>
 
+        ) : (
+          <p className="text-lg text-red-500">Please connect your wallet to view your USDC balance.</p>
+        )}
+      </div>
+      
       {/* Property Listings */}
       <div className="bg-secondary py-12">
         <div className="container mx-auto px-4">
@@ -330,6 +386,8 @@ export default function RWAPlatform() {
           </div>
         </div>
       </div>
+
+
 
       {/* Detail Modal */}
       {showModal && selectedProperty && (
@@ -498,9 +556,7 @@ export default function RWAPlatform() {
                   <div className="mb-1.5">
                     <div className="flex justify-between text-xs mb-0.5">
                       <span className="text-gray-500">From</span>
-                      <span className="text-gray-500">
-                        Balance: 1,245.00 USDT
-                      </span>
+                      <span className="text-gray-500">Balance: ${usdcBalanceData?.toString()}USDT</span>
                     </div>
                     <div className="flex items-center bg-secondary p-2 rounded-lg">
                       <input
@@ -510,9 +566,7 @@ export default function RWAPlatform() {
                           const usdtAmount =
                             Number.parseFloat(e.target.value) || 0
                           setUsdtAmount(usdtAmount)
-                          setTokenQuantity(
-                            usdtAmount / selectedProperty.tokenPrice,
-                          )
+                          setTokenQuantity(usdtAmount * 90909090909 / 1e18)
                         }}
                         className="bg-transparent outline-none flex-1 text-base font-medium"
                         placeholder="0.0"
@@ -643,9 +697,23 @@ export default function RWAPlatform() {
                   >
                     Cancel
                   </button>
-                  <button className="py-1.5 px-3 bg-primary text-white hover:bg-primary/80 transition-colors rounded-md flex items-center justify-center text-sm">
+                  <button className="py-1.5 px-3 bg-primary text-white hover:bg-primary/80 transition-colors rounded-md flex items-center justify-center text-sm"
+                    onClick={() => {
+                      // Handle swap logic here
+                      console.log("Swapping tokens...")
+
+                      writeContract({
+                        ...poolContractConfig,
+                        functionName: 'swap',
+                        args: [address as `0x${string}`, ethers.toBigInt(1)],
+                      })
+
+
+                    }}>
+                    
                     <ShoppingCart className="h-3.5 w-3.5 mr-1" />
                     <span>Swap</span>
+                    
                   </button>
                 </div>
 
