@@ -206,14 +206,14 @@ export default function RWAPlatform() {
           {/* Simplified Navigation */}
           <div className="flex items-center space-x-4">
             {walletConnected ? (
-              <button className="flex items-center py-2 px-4 bg-accent text-primary hover:bg-accent-light transition-colors rounded-md">
+              <button className="flex items-center py-2 px-4 bg-accent text-primary hover:bg-accent/80 transition-colors rounded-md">
                 <Wallet className="h-4 w-4 mr-2" />
                 <span>0x12...34AB</span>
               </button>
             ) : (
               <button
                 onClick={connectWallet}
-                className="flex items-center py-2 px-4 bg-accent text-primary hover:bg-accent-light transition-colors rounded-md"
+                className="flex items-center py-2 px-4 bg-accent text-primary hover:bg-accent transition-colors rounded-md"
               >
                 <Wallet className="h-4 w-4 mr-2" />
                 <span>Connect Wallet</span>
@@ -301,7 +301,7 @@ export default function RWAPlatform() {
                     </div>
                   </div>
                   <div className="mt-3">
-                    <button className="w-full flex items-center justify-center py-2 px-4 bg-primary text-white hover:bg-primary-dark transition-colors rounded-md text-sm">
+                    <button className="w-full flex items-center justify-center py-2 px-4 bg-primary text-white hover:bg-primary/80 transition-colors rounded-md text-sm">
                       <ShoppingCart className="h-4 w-4 mr-2" />
                       <span>More Details</span>
                     </button>
@@ -374,11 +374,11 @@ export default function RWAPlatform() {
                     <div className="bg-secondary p-1.5 rounded-md">
                       <h3 className="font-medium text-primary text-xs mb-0.5">Property Details</h3>
                       <div className="text-xs">
-                        <div className="flex justify-between py-0.5 border-b border-gray-200">
+                        <div className="flex justify-between py-0.5 border-b border-sidebar-border">
                           <span className="text-gray-600">Land Area:</span>
                           <span>{selectedProperty.landArea}</span>
                         </div>
-                        <div className="flex justify-between py-0.5 border-b border-gray-200">
+                        <div className="flex justify-between py-0.5 border-b border-sidebar-border">
                           <span className="text-gray-600">Land Type:</span>
                           <span>{selectedProperty.landType}</span>
                         </div>
@@ -392,11 +392,11 @@ export default function RWAPlatform() {
                     <div className="bg-secondary p-1.5 rounded-md">
                       <h3 className="font-medium text-primary text-xs mb-0.5">Token Details</h3>
                       <div className="text-xs">
-                        <div className="flex justify-between py-0.5 border-b border-gray-200">
+                        <div className="flex justify-between py-0.5 border-b border-sidebar-border">
                           <span className="text-gray-600">Token Symbol:</span>
                           <span>{selectedProperty.abbr}</span>
                         </div>
-                        <div className="flex justify-between py-0.5 border-b border-gray-200">
+                        <div className="flex justify-between py-0.5 border-b border-sidebar-border">
                           <span className="text-gray-600">Total Supply:</span>
                           <span>{selectedProperty.totalTokens} Tokens</span>
                         </div>
@@ -422,7 +422,7 @@ export default function RWAPlatform() {
 
                   <div className="bg-secondary p-1.5 rounded-md mb-2">
                     <h3 className="font-medium text-primary text-xs mb-0.5">Contract Address</h3>
-                    <div className="text-xs font-mono bg-card p-1 rounded overflow-hidden text-ellipsis">
+                    <div className="text-xs font-mono p-1 rounded overflow-hidden text-ellipsis">
                       {selectedProperty.contract}
                     </div>
                   </div>
@@ -445,7 +445,7 @@ export default function RWAPlatform() {
                 <h3 className="text-base font-bold text-primary mb-2">Swap Tokens</h3>
 
                 {/* Uniswap-like Swap Interface */}
-                <div className="bg-card rounded-lg p-2 mb-2 flex-1">
+                <div className="rounded-lg p-2 mb-2 flex-1">
                   {/* From (USDT) */}
                   <div className="mb-1.5">
                     <div className="flex justify-between text-xs mb-0.5">
@@ -571,11 +571,11 @@ export default function RWAPlatform() {
                 <div className="grid grid-cols-2 gap-2">
                   <button
                     onClick={closeModal}
-                    className="py-1.5 px-3 text-primary border border-accent hover:bg-secondary transition-colors rounded-md text-sm"
+                    className="py-1.5 px-3 bg-background text-primary border border-accent hover:bg-accent transition-colors rounded-md text-sm"
                   >
                     Cancel
                   </button>
-                  <button className="py-1.5 px-3 bg-primary text-white hover:bg-primary-dark transition-colors rounded-md flex items-center justify-center text-sm">
+                  <button className="py-1.5 px-3 bg-primary text-white hover:bg-primary/80 transition-colors rounded-md flex items-center justify-center text-sm">
                     <ShoppingCart className="h-3.5 w-3.5 mr-1" />
                     <span>Swap</span>
                   </button>
@@ -588,10 +588,10 @@ export default function RWAPlatform() {
                     <div className=" p-1 rounded border border-accent">
                       <Image src="/placeholder.svg?height=16&width=32" alt="USDT" width={32} height={16} />
                     </div>
-                    <div className=" p-1 rounded border border-gray-200">
+                    <div className=" p-1 rounded border border-sidebar-border">
                       <Image src="/placeholder.svg?height=16&width=32" alt="ETH" width={32} height={16} />
                     </div>
-                    <div className=" p-1 rounded border border-gray-200">
+                    <div className=" p-1 rounded border border-sidebar-border">
                       <Image src="/placeholder.svg?height=16&width=32" alt="BTC" width={32} height={16} />
                     </div>
                   </div>
