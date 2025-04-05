@@ -47,12 +47,12 @@ export function SelfQrCodeComponent({ userId, onSuccess }: SelfQrCodeComponentPr
   const selfApp = React.useMemo(() => {
     try {
       return new SelfAppBuilder({
-        appName: "LuLuChill",
+        appName: "luluchill",
         scope: "luluchill",
         endpoint: "https://luluchill.vercel.app/api/self/verify",
         endpointType: "staging_https",
         logoBase64:
-          "https://upload.wikimedia.org/wikipedia/commons/f/f9/L_cursiva.gif",
+          "https://github.com/luluchill/luluchill/blob/main/apps/web/public/logo.png",
         userIdType: "hex",
         userId: formattedUserId,
         disclosures: {
