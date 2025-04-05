@@ -117,7 +117,7 @@ export default function RWAPlatform() {
       agency: "LLCRWA",
       landArea: "38.78 Acre",
       landType: "Residential",
-      contract: "0x3c01c27726BA247a708aB15C0A9430648202773E",
+      contract: luluchillRWAContractConfig.address,
       tokenPrice: 120,
       priceChange: '+5.2%',
       trending: 'up',
@@ -131,7 +131,7 @@ export default function RWAPlatform() {
       agency: 'FPA',
       landArea: '14.22 Acre',
       landType: 'Commercial',
-      contract: '0x9bC1169Ca09555bf2721A5C9eC6D69c8073bfeB4',
+      contract: luluchillRWAContractConfig.address,
       tokenPrice: 1.58,
       priceChange: '+2.8%',
       trending: 'up',
@@ -145,7 +145,7 @@ export default function RWAPlatform() {
       agency: 'TBP',
       landArea: '73.26 Acre',
       landType: 'Residential',
-      contract: '0x3E5e9111Ae8eB78Fe1CC3bb8915d5D461F3Ef9A9',
+      contract: luluchillRWAContractConfig.address,
       tokenPrice: 56,
       priceChange: '-1.3%',
       trending: 'down',
@@ -159,7 +159,7 @@ export default function RWAPlatform() {
       agency: 'DAR',
       landArea: '120.45 Acre',
       landType: 'Agricultural',
-      contract: '0x5FbDB2315678afecb367f032d93F642f64180aa3',
+      contract: luluchillRWAContractConfig.address,
       tokenPrice: 11.55,
       priceChange: '+7.2%',
       trending: 'up',
@@ -220,7 +220,7 @@ export default function RWAPlatform() {
 
   const handleSwap = () => {
     if (!usdtAmount || usdtAmount <= 0) {
-      console.error("Invalid USDT amount");
+      console.error("Invalid USDC amount");
       return;
     }
 
@@ -229,7 +229,7 @@ export default function RWAPlatform() {
       functionName: "swap",
       args: [
         '0xd737545bE0FFcC4e3ACE1A9E664cA05e58F046f9' as `0x${string}`,
-        ethers.parseUnits(usdtAmount.toString(), 6), // 使用動態計算的 USDT 數量
+        ethers.parseUnits(usdtAmount.toString(), 6), // 使用動態計算的 USDC 數量
       ],
     });
 
@@ -363,7 +363,7 @@ export default function RWAPlatform() {
                     <div>
                       <div className="text-xs text-gray-500">Token Price</div>
                       <div className="text-sm font-medium">
-                        {property.tokenPrice} USDT
+                        {property.tokenPrice} USDC
                       </div>
                       <div
                         className={`flex items-center text-xs ${property.trending === 'up' ? 'text-success' : 'text-danger'}`}
@@ -385,7 +385,7 @@ export default function RWAPlatform() {
                     <div>
                       <div className="text-xs text-gray-500">Total Value</div>
                       <div className="text-sm font-bold text-danger">
-                        {property.totalValue} USDT
+                        {property.totalValue} USDC
                       </div>
                     </div>
                   </div>
@@ -504,7 +504,7 @@ export default function RWAPlatform() {
                         <div className="flex justify-between py-0.5">
                           <span className="text-gray-600">Current Price:</span>
                           <div className="flex items-center">
-                            <span>{selectedProperty.tokenPrice} USDT</span>
+                            <span>{selectedProperty.tokenPrice} USDC</span>
                             <div
                               className={`flex items-center text-xs ml-1 ${selectedProperty.trending === 'up' ? 'text-success' : 'text-danger'}`}
                             >
@@ -553,11 +553,11 @@ export default function RWAPlatform() {
 
                 {/* Uniswap-like Swap Interface */}
                 <div className="rounded-lg p-2 mb-2 flex-1">
-                  {/* From (USDT) */}
+                  {/* From (USDC) */}
                   <div className="mb-1.5">
                     <div className="flex justify-between text-xs mb-0.5">
                       <span className="text-gray-500">From</span>
-                      <span className="text-gray-500">Balance: ${usdcBalanceData?.toString()}USDT</span>
+                      <span className="text-gray-500">Balance: ${formattedUsdcBalance?.toString()}USDC</span>
                     </div>
                     <div className="flex items-center bg-secondary p-2 rounded-lg">
                       <input
@@ -574,12 +574,12 @@ export default function RWAPlatform() {
                       <div className="flex items-center bg-card py-0.5 px-2 rounded-md ml-2">
                         <Image
                           src="/placeholder.svg?height=16&width=16"
-                          alt="USDT"
+                          alt="USDC"
                           width={16}
                           height={16}
                           className="rounded-full mr-1"
                         />
-                        <span className="font-medium text-sm">USDT</span>
+                        <span className="font-medium text-sm">USDC</span>
                       </div>
                     </div>
                   </div>
@@ -606,7 +606,7 @@ export default function RWAPlatform() {
                         // onChange={(e) => {
                         //   const quantity = Number.parseFloat(e.target.value) || 0;
                         //   setTokenQuantity(quantity);
-                        //   setUsdtAmount(quantity / Number(usdtToRWANormalRate)); // 動態更新 USDT 數量
+                        //   setUsdtAmount(quantity / Number(usdtToRWANormalRate)); // 動態更新 USDC 數量
                         // }}
                         className="bg-transparent outline-none flex-1 text-base font-medium"
                         placeholder="0.0"
@@ -634,7 +634,7 @@ export default function RWAPlatform() {
                       <span className="text-gray-600">Price</span>
                       <span className="font-medium">
                         1 {selectedProperty.abbr} ={' '}
-                        {selectedProperty.tokenPrice} USDT
+                        {selectedProperty.tokenPrice} USDC
                       </span>
                     </div>
                     <div className="flex justify-between text-xs">
@@ -648,7 +648,7 @@ export default function RWAPlatform() {
                     <div className="flex justify-between text-xs">
                       <span className="text-gray-600">Liquidity Pool</span>
                       <span className="font-medium">
-                        {selectedProperty.abbr}/USDT
+                        {selectedProperty.abbr}/USDC
                       </span>
                     </div>
                     <div className="flex justify-between text-xs">
@@ -660,7 +660,7 @@ export default function RWAPlatform() {
                     <div className="flex justify-between text-xs">
                       <span className="text-gray-600">Pool Depth</span>
                       <span className="font-medium">
-                        {selectedProperty.totalValue} USDT
+                        {selectedProperty.totalValue} USDC
                       </span>
                     </div>
                   </div>
@@ -676,7 +676,7 @@ export default function RWAPlatform() {
                     </div>
                     <div className="flex justify-between">
                       <span>Network fee</span>
-                      <span>~0.05 USDT</span>
+                      <span>~0.05 USDC</span>
                     </div>
                     <div className="flex justify-between">
                       <span>Price impact</span>
@@ -711,7 +711,7 @@ export default function RWAPlatform() {
                     <div className=" p-1 rounded border border-accent">
                       <Image
                         src="/placeholder.svg?height=16&width=32"
-                        alt="USDT"
+                        alt="USDC"
                         width={32}
                         height={16}
                       />
