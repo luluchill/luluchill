@@ -15,7 +15,9 @@ import {
   RefreshCw,
 } from 'lucide-react'
 
-import { useWallet } from "@/components/wallet-provider"  // 假設 wallet-provider 是您專案中的錢包提供者
+import { useWallet } from '@/components/wallet-provider'
+import NetworkDisplay from '@/components/NetworkDisplay'
+import { ConnectWalletButton } from '@/components/connect-wallet-button'
 
 export default function InstitutionalReviewBack() {
   const { isConnected, connect, address } = useWallet() // 使用 wallet-provider 提供的功能
@@ -243,7 +245,10 @@ export default function InstitutionalReviewBack() {
   const totalCount = customers.length
 
   return (
-    <div className="flex flex-col min-h-screen" style={{ backgroundColor: '#F5F2EA', color: '#2C2A25' }}>
+    <div
+      className="flex flex-col min-h-screen"
+      style={{ backgroundColor: '#F5F2EA', color: '#2C2A25' }}
+    >
       {/* Navigation Bar */}
       <header className="bg-[#2C2A25] text-white">
         <div className="container mx-auto flex items-center justify-between py-3 px-6">
@@ -255,29 +260,16 @@ export default function InstitutionalReviewBack() {
               Institutional Review Panel
             </span>
           </div>
-
+          <ConnectWalletButton />
           {/* Updated Wallet Connection */}
-          <div className="flex items-center space-x-4">
-            {isConnected ? (
-              <button className="flex items-center py-2 px-4 bg-[#D4C19C] text-[#2C2A25] hover:bg-[#C4B18B] transition-colors rounded-md">
-                <Wallet className="h-4 w-4 mr-2" />
-                <span>{address}</span>
-              </button>
-            ) : (
-              <button
-                onClick={connect}
-                className="flex items-center py-2 px-4 bg-[#D4C19C] text-[#2C2A25] hover:bg-[#C4B18B] transition-colors rounded-md"
-              >
-                <Wallet className="h-4 w-4 mr-2" />
-                <span>Connect Wallet</span>
-              </button>
-            )}
-          </div>
         </div>
       </header>
 
       {/* Main Content */}
-      <div className="flex-1 py-6" style={{ backgroundColor: '#F5F2EA', color: '#2C2A25' }}>
+      <div
+        className="flex-1 py-6"
+        style={{ backgroundColor: '#F5F2EA', color: '#2C2A25' }}
+      >
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-6">
             <h1 className="text-2xl font-bold text-[#2C2A25] mb-4 md:mb-0">
@@ -792,152 +784,97 @@ export default function InstitutionalReviewBack() {
                     <div className="flex">
                       <div className="w-1/3 text-gray-500">Wallet Address</div>
                       <div className="w-2/3 font-medium"></div>
-                        <div className="flex items-center">
-                          <span
-                            className="font-mono bg-gray-100 p-1 rounded text-xs truncate max-w-[200px] md:max-w-[280px]"
-                            title={selectedCustomer.walletAddress}
+                      <div className="flex items-center">
+                        <span
+                          className="font-mono bg-gray-100 p-1 rounded text-xs truncate max-w-[200px] md:max-w-[280px]"
+                          title={selectedCustomer.walletAddress}
+                        >
+                          {selectedCustomer.walletAddress}
+                        </span>
+                        <button
+                          className="ml-2 text-gray-400 hover:text-gray-600 flex-shrink-0"
+                          onClick={() =>
+                            navigator.clipboard.writeText(
+                              selectedCustomer.walletAddress,
+                            )
+                          }
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-4 w-4"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
                           >
-                            {selectedCustomer.walletAddress}
-                          </span>
-                          <button
-                            className="ml-2 text-gray-400 hover:text-gray-600 flex-shrink-0"
-                            onClick={() =>
-                              navigator.clipboard.writeText(
-                                selectedCustomer.walletAddress,
-                              )
-                            }
-                          >
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              className="h-4 w-4"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
-                              />
-                            </svg>
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="flex">
-                      <div className="w-1/3 text-gray-500">
-                        Application Date
-                      </div>
-                      <div className="w-2/3 font-medium">
-                        {selectedCustomer.applicationDate}
-                      </div>
-                    </div>
-
-                    <div className="flex">
-                      <div className="w-1/3 text-gray-500">Status</div>
-                      <div className="w-2/3">
-                        {selectedCustomer.status === 'pending' ? (
-                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800">
-                            <Clock className="h-3 w-3 mr-1" />
-                            Pending
-                          </span>
-                        ) : selectedCustomer.status === 'approved' ? (
-                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                            <CheckCircle className="h-3 w-3 mr-1" />
-                            Approved
-                          </span>
-                        ) : (
-                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                            <XCircle className="h-3 w-3 mr-1" />
-                            Rejected
-                          </span>
-                        )}
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+                            />
+                          </svg>
+                        </button>
                       </div>
                     </div>
                   </div>
-                </div>
 
-                {/* Self Protocol Verification - Right Side */}
-                <div>
-                  <h3 className="text-xl font-semibold text-[#2C2A25] mb-4 pb-2 border-b border-gray-200 flex items-center">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-5 w-5 mr-2 text-[#D4C19C]"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
-                      />
-                    </svg>
-                    Self Protocol Verification
-                  </h3>
+                  <div className="flex">
+                    <div className="w-1/3 text-gray-500">Application Date</div>
+                    <div className="w-2/3 font-medium">
+                      {selectedCustomer.applicationDate}
+                    </div>
+                  </div>
 
-                  <div className="bg-[#F5F2EA] bg-opacity-60 rounded-lg p-4">
-                    <div className="flex items-center mb-4">
-                      <div className="h-10 w-10 rounded-full bg-[#D4C19C] flex items-center justify-center mr-3">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-6 w-6 text-white"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M15 9h3.75M15 12h3.75M15 15h3.75M4.5 19.5h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5zm6-10.125a1.875 1.875 0 11-3.75 0 1.875 1.875 0 013.75 0zm1.294 6.336a6.721 6.721 0 01-3.17.789 6.721 6.721 0 01-3.168-.789 3.376 3.376 0 016.338 0z"
-                          />
-                        </svg>
-                      </div>
-                      <div>
-                        <p className="text-sm text-gray-500">Verified via</p>
-                        <p className="text-md font-medium text-[#2C2A25]">
-                          Passport
-                        </p>
-                      </div>
-                      <div className="ml-auto">
-                        <span className="bg-green-100 text-green-800 text-xs px-2.5 py-1 rounded-full flex items-center">
-                          <CheckCircle className="h-3 w-3 mr-1" />
-                          Verified
+                  <div className="flex">
+                    <div className="w-1/3 text-gray-500">Status</div>
+                    <div className="w-2/3">
+                      {selectedCustomer.status === 'pending' ? (
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800">
+                          <Clock className="h-3 w-3 mr-1" />
+                          Pending
                         </span>
-                      </div>
+                      ) : selectedCustomer.status === 'approved' ? (
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                          <CheckCircle className="h-3 w-3 mr-1" />
+                          Approved
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                          <XCircle className="h-3 w-3 mr-1" />
+                          Rejected
+                        </span>
+                      )}
                     </div>
+                  </div>
+                </div>
+              </div>
 
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="bg-white p-3 rounded-md">
-                        <p className="text-xs text-gray-500 mb-1">Full Name</p>
-                        <p className="text-sm font-medium">
-                          {selectedCustomer.name}
-                        </p>
-                      </div>
-                      <div className="bg-white p-3 rounded-md">
-                        <p className="text-xs text-gray-500 mb-1">
-                          Nationality
-                        </p>
-                        <p className="text-sm font-medium">Taiwan</p>
-                      </div>
-                      <div className="bg-white p-3 rounded-md">
-                        <p className="text-xs text-gray-500 mb-1">Age</p>
-                        <p className="text-sm font-medium">35</p>
-                      </div>
-                      <div className="bg-white p-3 rounded-md">
-                        <p className="text-xs text-gray-500 mb-1">Gender</p>
-                        <p className="text-sm font-medium">Male</p>
-                      </div>
-                    </div>
+              {/* Self Protocol Verification - Right Side */}
+              <div>
+                <h3 className="text-xl font-semibold text-[#2C2A25] mb-4 pb-2 border-b border-gray-200 flex items-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-5 w-5 mr-2 text-[#D4C19C]"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+                    />
+                  </svg>
+                  Self Protocol Verification
+                </h3>
 
-                    <div className="mt-4 text-xs text-gray-500 flex items-center">
+                <div className="bg-[#F5F2EA] bg-opacity-60 rounded-lg p-4">
+                  <div className="flex items-center mb-4">
+                    <div className="h-10 w-10 rounded-full bg-[#D4C19C] flex items-center justify-center mr-3">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
-                        className="h-4 w-4 mr-1 text-[#D4C19C]"
+                        className="h-6 w-6 text-white"
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke="currentColor"
@@ -946,60 +883,111 @@ export default function InstitutionalReviewBack() {
                           strokeLinecap="round"
                           strokeLinejoin="round"
                           strokeWidth={2}
-                          d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                          d="M15 9h3.75M15 12h3.75M15 15h3.75M4.5 19.5h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5zm6-10.125a1.875 1.875 0 11-3.75 0 1.875 1.875 0 013.75 0zm1.294 6.336a6.721 6.721 0 01-3.17.789 6.721 6.721 0 01-3.168-.789 3.376 3.376 0 016.338 0z"
                         />
                       </svg>
-                      <span>
-                        Verified on {selectedCustomer.applicationDate} through
-                        Self Protocol
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-500">Verified via</p>
+                      <p className="text-md font-medium text-[#2C2A25]">
+                        Passport
+                      </p>
+                    </div>
+                    <div className="ml-auto">
+                      <span className="bg-green-100 text-green-800 text-xs px-2.5 py-1 rounded-full flex items-center">
+                        <CheckCircle className="h-3 w-3 mr-1" />
+                        Verified
                       </span>
                     </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="bg-white p-3 rounded-md">
+                      <p className="text-xs text-gray-500 mb-1">Full Name</p>
+                      <p className="text-sm font-medium">
+                        {selectedCustomer.name}
+                      </p>
+                    </div>
+                    <div className="bg-white p-3 rounded-md">
+                      <p className="text-xs text-gray-500 mb-1">Nationality</p>
+                      <p className="text-sm font-medium">Taiwan</p>
+                    </div>
+                    <div className="bg-white p-3 rounded-md">
+                      <p className="text-xs text-gray-500 mb-1">Age</p>
+                      <p className="text-sm font-medium">35</p>
+                    </div>
+                    <div className="bg-white p-3 rounded-md">
+                      <p className="text-xs text-gray-500 mb-1">Gender</p>
+                      <p className="text-sm font-medium">Male</p>
+                    </div>
+                  </div>
+
+                  <div className="mt-4 text-xs text-gray-500 flex items-center">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-4 w-4 mr-1 text-[#D4C19C]"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                    <span>
+                      Verified on {selectedCustomer.applicationDate} through
+                      Self Protocol
+                    </span>
                   </div>
                 </div>
               </div>
             </div>
+          </div>
 
-            {/* Footer */}
-            <div className="bg-gray-50 px-6 py-4 border-t border-gray-200 flex justify-between">
-              {selectedCustomer.status === 'pending' ? (
-                <>
+          {/* Footer */}
+          <div className="bg-gray-50 px-6 py-4 border-t border-gray-200 flex justify-between">
+            {selectedCustomer.status === 'pending' ? (
+              <>
+                <button
+                  onClick={() => setSelectedCustomer(null)}
+                  className="py-2 px-4 border border-[#D4C19C] rounded-md text-[#2C2A25] hover:bg-[#F5F2EA] transition-colors"
+                >
+                  Close
+                </button>
+                <div className="flex space-x-3">
                   <button
-                    onClick={() => setSelectedCustomer(null)}
-                    className="py-2 px-4 border border-[#D4C19C] rounded-md text-[#2C2A25] hover:bg-[#F5F2EA] transition-colors"
+                    onClick={() => handleReject(selectedCustomer.id)}
+                    className="py-2 px-4 border border-red-300 bg-red-50 rounded-md text-red-700 hover:bg-red-100 transition-colors flex items-center"
                   >
-                    Close
+                    <UserX className="h-4 w-4 mr-2" />
+                    Reject Application
                   </button>
-                  <div className="flex space-x-3">
-                    <button
-                      onClick={() => handleReject(selectedCustomer.id)}
-                      className="py-2 px-4 border border-red-300 bg-red-50 rounded-md text-red-700 hover:bg-red-100 transition-colors flex items-center"
-                    >
-                      <UserX className="h-4 w-4 mr-2" />
-                      Reject Application
-                    </button>
-                    <button
-                      onClick={() => handleApprove(selectedCustomer.id)}
-                      className="py-2 px-4 bg-[#2C2A25] rounded-md text-white hover:bg-[#3A382F] transition-colors flex items-center"
-                    >
-                      <UserCheck className="h-4 w-4 mr-2" />
-                      Approve Application
-                    </button>
-                  </div>
-                </>
-              ) : (
-                <>
                   <button
-                    onClick={() => setSelectedCustomer(null)}
-                    className="py-2 px-4 border border-[#D4C19C] rounded-md text-[#2C2A25] hover:bg-[#F5F2EA] transition-colors"
+                    onClick={() => handleApprove(selectedCustomer.id)}
+                    className="py-2 px-4 bg-[#2C2A25] rounded-md text-white hover:bg-[#3A382F] transition-colors flex items-center"
                   >
-                    Close
+                    <UserCheck className="h-4 w-4 mr-2" />
+                    Approve Application
                   </button>
-                  <button className="py-2 px-4 bg-[#2C2A25] rounded-md text-white hover:bg-[#3A382F] transition-colors">
-                    Edit Customer Information
-                  </button>
-                </>
-              )}
-            </div>
+                </div>
+              </>
+            ) : (
+              <>
+                <button
+                  onClick={() => setSelectedCustomer(null)}
+                  className="py-2 px-4 border border-[#D4C19C] rounded-md text-[#2C2A25] hover:bg-[#F5F2EA] transition-colors"
+                >
+                  Close
+                </button>
+                <button className="py-2 px-4 bg-[#2C2A25] rounded-md text-white hover:bg-[#3A382F] transition-colors">
+                  Edit Customer Information
+                </button>
+              </>
+            )}
+          </div>
         </div>
       )}
     </div>
