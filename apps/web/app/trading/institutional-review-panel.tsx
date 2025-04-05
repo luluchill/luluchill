@@ -327,7 +327,7 @@ export default function RWAPlatform() {
               >
                 <div className="relative">
                   <Image
-                    src="/placeholder.svg?height=200&width=400"
+                    src="/rwa.png"
                     alt={property.name}
                     width={400}
                     height={200}
@@ -336,7 +336,7 @@ export default function RWAPlatform() {
                   <div className="absolute top-3 left-3 bg-card bg-opacity-90 px-2 py-1 rounded-md text-sm text-primary flex items-center">
                     <div className="w-5 h-5 bg-accent rounded-full mr-2 flex items-center justify-center text-white text-xs">
                       <Image
-                        src="/placeholder.svg?height=20&width=20"
+                        src="/rwa.png"
                         alt={`${property.agency} Logo`}
                         width={20}
                         height={20}
@@ -428,7 +428,7 @@ export default function RWAPlatform() {
               >
                 <div className="relative h-[250px] rounded-lg overflow-hidden">
                   <Image
-                    src="/placeholder.svg?height=300&width=600"
+                    src="/rwa.png"
                     alt={`${(selectedProperty as any).name} - Image ${currentSlide + 1}`}
                     fill
                     className="object-cover"
