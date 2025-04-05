@@ -49,7 +49,7 @@ export function SelfQrCodeComponent({ userId, onSuccess }: SelfQrCodeComponentPr
       return new SelfAppBuilder({
         appName: "LuLuChill",
         scope: "luluchill",
-        endpoint: "http://luluchill.vercel.app/api/self/verify",
+        endpoint: "https://luluchill.vercel.app/api/self/verify",
         endpointType: "staging_https",
         logoBase64:
           "https://upload.wikimedia.org/wikipedia/commons/f/f9/L_cursiva.gif",
