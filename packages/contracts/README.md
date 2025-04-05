@@ -98,15 +98,6 @@ RPC_URL=目標區塊鏈的 RPC URL
 
 ## 部署合約
 
-EAS 合約有兩種部署選項，可以根據需要選擇：
-
-### 基本 EAS 系統
-
-部署 SchemaRegistry 和 EAS 核心合約：
-
-```bash
-pnpm run contracts:deploy-eas-basic
-```
 
 ### 完整 EAS 系統
 
@@ -139,6 +130,17 @@ pnpm run contracts:verify <合約地址> <合約名稱> --chain-id <區塊鏈 ID
 ```bash
 pnpm run contracts:verify 0x... SchemaRegistry --chain-id 1 --watch
 pnpm run contracts:verify 0x... EAS --chain-id 1 --watch
+```
+
+如果是要部署在 Hashkey Chain :
+```bash
+pnpm contracts:verify \
+  --rpc-url https://hashkeychain-testnet.alt.technology \
+  --verifier blockscout \
+  --verifier-url 'https://hashkeychain-testnet-explorer.alt.technology:443/api/' \
+  <EAS合約地址> \
+  lib/eas-contracts/contracts/EAS.sol:EAS \
+  <SchemaRegistry合約地址>
 ```
 
 ## 注意事項
