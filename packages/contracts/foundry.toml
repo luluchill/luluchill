@@ -3,4 +3,6 @@ src = "src"
 out = "out"
 libs = ["lib"]
 
+[etherscan]
+hashKey_chain_testnet = { key = "", url = "https://hashkeychain-testnet-explorer.alt.technology:443/api/" }
 # See more config options https://github.com/foundry-rs/foundry/blob/master/crates/config/README.md#all-options

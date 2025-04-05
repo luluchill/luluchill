@@ -5,8 +5,11 @@
     "build": "turbo run build",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "check-types": "turbo run check-types"
+    "contracts:build": "cd packages/contracts && forge build",
+    "contracts:test": "cd packages/contracts && forge test",
+    "contracts:update-submodules": "git submodule update --init --recursive",
+    "contracts:deploy-eas": "cd packages/contracts && forge script script/DeployEAS.s.sol --optimize --optimizer-runs 200 --rpc-url $RPC_URL --broadcast -vvv",
+    "contracts:verify": "cd packages/contracts && forge verify-contract"
   },
   "devDependencies": {
     "prettier": "^3.5.3",

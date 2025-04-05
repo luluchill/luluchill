@@ -4,6 +4,7 @@ pragma solidity ^0.8.0;
 import "forge-std/Script.sol";
 import "../lib/eas-contracts/contracts/EAS.sol";
 import "../lib/eas-contracts/contracts/SchemaRegistry.sol";
+import "../lib/eas-contracts/contracts/Indexer.sol";
 
 contract DeployEASScript is Script {
     function run() external {
@@ -15,8 +16,19 @@ contract DeployEASScript is Script {
         console.log("SchemaRegistry deployed at:", address(schemaRegistry));
 
         // 部署 EAS
-        EAS eas = new EAS(address(schemaRegistry));
+        EAS eas = new EAS(schemaRegistry);
         console.log("EAS deployed at:", address(eas));
+
+        // 部署 Indexer
+        Indexer indexer = new Indexer(eas);
+        console.log("Indexer deployed at:", address(indexer));
+
+        // 印出合約地址摘要，便於記錄
+        console.log("\n--- EAS deploy summary ---");
+        console.log("SchemaRegistry:", address(schemaRegistry));
+        console.log("EAS:", address(eas));
+        console.log("Indexer:", address(indexer));
+        console.log("--------------------\n");
 
         vm.stopBroadcast();
     }
