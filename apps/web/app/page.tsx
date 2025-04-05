@@ -6,6 +6,7 @@ import { ArrowRight, Shield, Wallet, Building } from "lucide-react"
 import { redirect } from "next/navigation";
 import { useEffect } from "react";
 import { useAccount } from "wagmi"; // 使用 wagmi 來獲取當前錢包地址
+import Image from "next/image"
 
 export default function Home() {
   const institutionAddress = "0x941AE41b7e08001c02C910f72CA465B07435903C";
@@ -13,11 +14,11 @@ export default function Home() {
 
   useEffect(() => {
     if (currentAddress) {
-  if (currentAddress === institutionAddress) {
-    redirect("/institution/review"); // 如果是機構，直接重定向到 dashboard
+      if (currentAddress === institutionAddress) {
+        redirect("/institution/review"); // 如果是機構，直接重定向到 dashboard
       } else {
         // redirect("/"); // 如果不是機構，重定向到首頁
-  }
+      }
     } else {
       redirect("/"); // 如果沒有連接錢包，重定向到首頁
     }
@@ -27,8 +28,8 @@ export default function Home() {
     <div className="min-h-screen bg-gradient-to-b from-background to-background/80">
       <header className="container mx-auto py-6 flex justify-between items-center">
         <div className="flex items-center gap-2">
-          <Shield className="h-8 w-8 text-primary" />
-          <span className="text-xl font-bold">RWA Platform</span>
+          <Image src="/logo.png" alt="Logo" width={32} height={32} />
+          <span className="text-xl font-bold">luluchill</span>
         </div>
         <ConnectWalletButton />
       </header>
@@ -90,4 +91,3 @@ export default function Home() {
     </div>
   )
 }
-

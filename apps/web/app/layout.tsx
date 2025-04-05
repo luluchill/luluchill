@@ -9,7 +9,7 @@ import { headers } from 'next/headers'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'RWA Trading Platform',
+  title: 'lulochill',
   description: 'Trade Real-World Assets. Verified, Compliant, Decentralized.',
   generator: 'v0.dev',
 }
