@@ -1,19 +1,44 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { ConnectWalletButton } from "@/components/connect-wallet-button"
 import { useWallet } from "@/components/wallet-provider"
-import { CheckCircle2, Clock, ArrowRight, Shield, AlertCircle, QrCode } from "lucide-react"
+import { CheckCircle2, Clock, ArrowRight, Shield, AlertCircle } from "lucide-react"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { SelfQrCodeComponent } from "@/components/self-qrcode-component"
 
 export default function UserRegistration() {
-  const { isConnected } = useWallet()
+  const { isConnected, address } = useWallet()
   const [currentStep, setCurrentStep] = useState(1)
   const [proofSubmitted, setProofSubmitted] = useState(false)
   const [isQrModalOpen, setIsQrModalOpen] = useState(false)
+  const [formattedAddress, setFormattedAddress] = useState<string | null>(null)
+
+  // Format the address when it changes
+  useEffect(() => {
+    if (address) {
+      // Ensure the address is properly formatted for Self Protocol
+      // This is a simplified check - in production you'd want more validation
+      let formatted = address.toLowerCase()
+      if (!formatted.startsWith("0x")) {
+        formatted = `0x${formatted}`
+      }
+
+      // Pad the address if needed (Self Protocol expects a full-length address)
+      if (formatted.length < 42) {
+        const paddingNeeded = 42 - formatted.length
+        const padding = "0".repeat(paddingNeeded - 2) // -2 for the '0x' prefix
+        formatted = `0x${padding}${formatted.substring(2)}`
+      }
+
+      setFormattedAddress(formatted)
+    } else {
+      setFormattedAddress(null)
+    }
+  }, [address])
 
   const handleVerify = () => {
     setIsQrModalOpen(true)
@@ -187,14 +212,10 @@ export default function UserRegistration() {
           </DialogHeader>
           <div className="flex flex-col items-center justify-center p-6">
             <div className="bg-white p-4 rounded-lg mb-4">
-              <div className="w-64 h-64 relative">
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <QrCode className="h-full w-full text-black" />
-                </div>
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <Shield className="h-16 w-16 text-primary opacity-30" />
-                </div>
-              </div>
+              <SelfQrCodeComponent
+                userId={formattedAddress || "0x0123456789abcdef0123456789abcdef01234567"}
+                onSuccess={handleQrScanned}
+              />
             </div>
             <p className="text-sm text-muted-foreground text-center mb-4">
               Don't have the Self Protocol app?{" "}
