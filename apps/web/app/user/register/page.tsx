@@ -41,6 +41,24 @@ export default function UserRegistration() {
     }
   }, [address])
 
+  useEffect(() => {
+    if (currentStep === 2 && formattedAddress) {
+      const checkUserExistence = async () => {
+        try {
+          const response = await fetch(`/api/user/is-exist?ethAddress=${formattedAddress}`);
+          const data = await response.json();
+          if (data.isExist) {
+            setProofSubmitted(true);
+            setCurrentStep(3);
+          }
+        } catch (error) {
+          console.error("Error checking user existence:", error);
+        }
+      };
+      checkUserExistence();
+    }
+  }, [currentStep, formattedAddress]);
+
   const handleVerify = () => {
     setIsQrModalOpen(true)
   }
