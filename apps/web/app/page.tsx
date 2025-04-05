@@ -4,15 +4,24 @@ import { ConnectWalletButton } from "@/components/connect-wallet-button"
 import Link from "next/link"
 import { ArrowRight, Shield, Wallet, Building } from "lucide-react"
 import { redirect } from "next/navigation";
+import { useEffect } from "react";
+import { useAccount } from "wagmi"; // 使用 wagmi 來獲取當前錢包地址
 
 export default function Home() {
   const institutionAddress = "0x941AE41b7e08001c02C910f72CA465B07435903C";
+  const { address: currentAddress } = useAccount(); // 獲取當前錢包地址
 
-  // 假設從某處獲取當前地址
-  const currentAddress = "0x941AE41b7e08001c02C910f72CA465B07435903C";
+  useEffect(() => {
+    if (currentAddress) {
   if (currentAddress === institutionAddress) {
     redirect("/institution/review"); // 如果是機構，直接重定向到 dashboard
+      } else {
+        redirect("/"); // 如果不是機構，重定向到首頁
   }
+    } else {
+      redirect("/"); // 如果沒有連接錢包，重定向到首頁
+    }
+  }, [currentAddress]);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-background/80">
