@@ -266,7 +266,6 @@ export default function RWAPlatform() {
             <span className="text-2xl font-bold text-accent whitespace-nowrap">
               luluchill
             </span>
-            <span className="text-sm ml-2 text-accent">Real Estate Assets</span>
           </div>
 
           {/* Simplified Navigation */}
