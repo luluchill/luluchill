@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation'; // 使用 next/navigation 進行重定向
-import { useAccount, useConnect } from 'wagmi'; // 使用 wagmi 來管理錢包
+import { useAccount, useConnect, useChainId } from 'wagmi'; // 使用 wagmi 來管理錢包
 import {
   Wallet,
   UserCheck,
@@ -17,9 +17,28 @@ import {
   RefreshCw,
 } from 'lucide-react';
 
+
+// 定義 User 型別
+type User = {
+  id: number;
+  createdAt: string;
+  ethAddress: string;
+  passportNumber: string;
+  firstName: string;
+  lastName: string;
+  olderThan: string;
+  nationality: string;
+  name: string;
+  passportNoOfac: boolean;
+  attestationUidPolygon?: string | null;
+  attestationUidHashkey?: string | null;
+  status: 'pending' | 'approved' | 'rejected';
+};
+
 export default function InstitutionalReviewBack() {
   const { address, isConnected } = useAccount(); // 獲取當前錢包地址和連接狀態
   const { connect, connectors } = useConnect(); // 用於連接錢包
+  const chainId = useChainId(); // 使用 useNetwork 取得 chain 資訊
   const router = useRouter();
   const institutionAddress = "0x941AE41b7e08001c02C910f72CA465B07435903C";
 
@@ -29,21 +48,32 @@ export default function InstitutionalReviewBack() {
     }
   }, [isConnected, address, router]);
 
+  useEffect(() => {
+    // if (chainId !== 80001 && chainId !== 133) {
+    //   router.push('/'); // 若 chainId 不符合，重定向到首頁
+    // }
+  }, [chainId]);
+
   const [filterStatus, setFilterStatus] = useState('all')
   const [showFilters, setShowFilters] = useState(false)
-  const [selectedCustomer, setSelectedCustomer] = useState<{
-    id: number
-    name: string
-    email: string
-    walletAddress: string
-    status: string
-    applicationDate: string
-    documents: string[]
-    notes: string
-  } | null>(null)
+  const [selectedCustomer, setSelectedCustomer] = useState<User | null>(null); // 更新為 User | null
   const [searchQuery, setSearchQuery] = useState('')
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 10
+  const [customers, setCustomers] = useState<User[]>([]); // 從 API 獲取的使用者資料
+
+  useEffect(() => {
+    async function fetchCustomers() {
+      try {
+        const response = await fetch(`/api/user/list-no-attestation?chainId=${chainId}`);
+        const data = await response.json();
+        setCustomers(data); // 設定從 API 獲取的使用者資料
+      } catch (error) {
+        console.error("Failed to fetch customers:", error);
+      }
+    }
+    fetchCustomers();
+  }, []);
 
   // Prevent scrolling when modal is open
   useEffect(() => {
@@ -57,148 +87,6 @@ export default function InstitutionalReviewBack() {
       document.body.style.overflow = 'unset'
     }
   }, [selectedCustomer])
-
-  // Customer data for review
-  const customers = [
-    {
-      id: 1,
-      name: 'Wang, Ming-Hua',
-      email: 'minghua.wang@example.com',
-      walletAddress: '0x7a58c0Be72BE218B41C608b7Fe7C5bB630736C71',
-      status: 'pending', // pending, approved, rejected
-      applicationDate: '2025-03-28',
-      documents: ['ID Verification', 'Proof of Address', 'Bank Statement'],
-      notes:
-        'Customer has provided all required documents. Awaiting final review.',
-    },
-    {
-      id: 2,
-      name: 'Chen, Li-Wei',
-      email: 'liwei.chen@example.com',
-      walletAddress: '0x9bC1169Ca09555bf2721A5C9eC6D69c8073bfeB4',
-      status: 'pending',
-      applicationDate: '2025-03-29',
-      documents: ['ID Verification', 'Proof of Address'],
-      notes:
-        'Proof of address document quality is low. May need to request a clearer copy.',
-    },
-    {
-      id: 3,
-      name: 'Lin, Yu-Ting',
-      email: 'yuting.lin@example.com',
-      walletAddress: '0x3E5e9111Ae8eB78Fe1CC3bb8915d5D461F3Ef9A9',
-      status: 'approved',
-      applicationDate: '2025-03-25',
-      documents: [
-        'ID Verification',
-        'Proof of Address',
-        'Bank Statement',
-        'Source of Funds',
-      ],
-      notes: 'All documents verified successfully.',
-    },
-    {
-      id: 4,
-      name: 'Huang, Jia-Cheng',
-      email: 'jiacheng.huang@example.com',
-      walletAddress: '0x5FbDB2315678afecb367f032d93F642f64180aa3',
-      status: 'rejected',
-      applicationDate: '2025-03-26',
-      documents: ['ID Verification', 'Proof of Address'],
-      notes: 'Inconsistencies found between ID and address documents.',
-    },
-    {
-      id: 5,
-      name: 'Chang, Wei-Jen',
-      email: 'weijen.chang@example.com',
-      walletAddress: '0x8626f6940E2eb28930eFb4CeF49B2d1F2C9C1199',
-      status: 'pending',
-      applicationDate: '2025-03-30',
-      documents: ['ID Verification', 'Proof of Address', 'Bank Statement'],
-      notes:
-        'Bank statement shows insufficient activity. May need additional verification.',
-    },
-    {
-      id: 6,
-      name: 'Hsu, Mei-Ling',
-      email: 'meiling.hsu@example.com',
-      walletAddress: '0x1CBd3b2eC6e4C005eFE9825686461B8F58da57Fc',
-      status: 'pending',
-      applicationDate: '2025-03-30',
-      documents: ['ID Verification', 'Proof of Address'],
-      notes: '',
-    },
-    {
-      id: 7,
-      name: 'Kuo, Tzu-Chien',
-      email: 'tzuchien.kuo@example.com',
-      walletAddress: '0x4B20993Bc481177ec7E8f571ceCaE8A9e22C02db',
-      status: 'pending',
-      applicationDate: '2025-03-29',
-      documents: [
-        'ID Verification',
-        'Proof of Address',
-        'Bank Statement',
-        'Source of Funds',
-      ],
-      notes: 'Source of funds document requires additional scrutiny.',
-    },
-    {
-      id: 8,
-      name: 'Tsai, Yi-Chen',
-      email: 'yichen.tsai@example.com',
-      walletAddress: '0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2',
-      status: 'pending',
-      applicationDate: '2025-03-28',
-      documents: ['ID Verification', 'Proof of Address', 'Bank Statement'],
-      notes: '',
-    },
-    {
-      id: 9,
-      name: 'Yang, Chih-Wei',
-      email: 'chihwei.yang@example.com',
-      walletAddress: '0x78731D3Ca6b7E34aC0F824c42a7cC18A495cabaB',
-      status: 'pending',
-      applicationDate: '2025-03-27',
-      documents: ['ID Verification'],
-      notes: 'Missing proof of address document.',
-    },
-    {
-      id: 10,
-      name: 'Wu, Hsiao-Ting',
-      email: 'hsiaoting.wu@example.com',
-      walletAddress: '0x617F2E2fD72FD9D5503197092aC168c91465E7f2',
-      status: 'pending',
-      applicationDate: '2025-03-26',
-      documents: ['ID Verification', 'Proof of Address', 'Bank Statement'],
-      notes: '',
-    },
-    {
-      id: 11,
-      name: 'Cheng, Shih-Chieh',
-      email: 'shihchieh.cheng@example.com',
-      walletAddress: '0x17F6AD8Ef982297579C203069C1DbfFE4348c372',
-      status: 'pending',
-      applicationDate: '2025-03-25',
-      documents: [
-        'ID Verification',
-        'Proof of Address',
-        'Bank Statement',
-        'Source of Funds',
-      ],
-      notes: 'All documents submitted, pending final review.',
-    },
-    {
-      id: 12,
-      name: 'Lee, Tzu-Yun',
-      email: 'tzuyun.lee@example.com',
-      walletAddress: '0x5c6B0f7Bf3E7ce046039Bd8FABdfD3f9F5021678',
-      status: 'pending',
-      applicationDate: '2025-03-24',
-      documents: ['ID Verification', 'Proof of Address'],
-      notes: '',
-    },
-  ]
 
   // Handle approve
   const handleApprove = (customerId) => {
@@ -234,8 +122,7 @@ export default function InstitutionalReviewBack() {
       filterStatus === 'all' || customer.status === filterStatus
     const matchesSearch =
       customer.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      customer.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      customer.walletAddress.toLowerCase().includes(searchQuery.toLowerCase())
+      customer.ethAddress.toLowerCase().includes(searchQuery.toLowerCase())
     return matchesStatus && matchesSearch
   })
 
@@ -505,23 +392,21 @@ export default function InstitutionalReviewBack() {
                           <span className="text-sm font-medium text-[#2C2A25]">
                             {customer.name}
                           </span>
-                          <span className="text-xs text-gray-500">
-                            {customer.email}
-                          </span>
+
                         </div>
                       </td>
                       <td className="py-3 px-4">
                         <div className="flex items-center">
                           <span className="text-xs font-mono bg-gray-100 p-1 rounded">
-                            {customer.walletAddress.slice(0, 6)}...
-                            {customer.walletAddress.slice(-4)}
+                            {customer.ethAddress.slice(0, 6)}...
+                            {customer.ethAddress.slice(-4)}
                           </span>
                           <button
                             className="ml-2 text-gray-400 hover:text-gray-600"
                             onClick={(e) => {
                               e.stopPropagation()
                               navigator.clipboard.writeText(
-                                customer.walletAddress,
+                                customer.ethAddress,
                               )
                             }}
                           >
@@ -543,7 +428,7 @@ export default function InstitutionalReviewBack() {
                         </div>
                       </td>
                       <td className="py-3 px-4 text-sm">
-                        {customer.applicationDate}
+                        {customer.createdAt}
                       </td>
                       <td className="py-3 px-4">
                         {customer.status === 'pending' ? (
@@ -792,12 +677,7 @@ export default function InstitutionalReviewBack() {
                       </div>
                     </div>
 
-                    <div className="flex">
-                      <div className="w-1/3 text-gray-500">Email</div>
-                      <div className="w-2/3 font-medium">
-                        {selectedCustomer.email}
-                      </div>
-                    </div>
+
 
                     <div className="flex">
                       <div className="w-1/3 text-gray-500">Wallet Address</div>
@@ -805,15 +685,15 @@ export default function InstitutionalReviewBack() {
                         <div className="flex items-center">
                           <span
                             className="font-mono bg-gray-100 p-1 rounded text-xs truncate max-w-[200px] md:max-w-[280px]"
-                            title={selectedCustomer.walletAddress}
+                            title={selectedCustomer.ethAddress}
                           >
-                            {selectedCustomer.walletAddress}
+                          {selectedCustomer.ethAddress}
                           </span>
                           <button
                             className="ml-2 text-gray-400 hover:text-gray-600 flex-shrink-0"
                             onClick={() =>
                               navigator.clipboard.writeText(
-                                selectedCustomer.walletAddress,
+                                selectedCustomer.ethAddress,
                               )
                             }
                           >
@@ -841,7 +721,7 @@ export default function InstitutionalReviewBack() {
                         Application Date
                       </div>
                       <div className="w-2/3 font-medium">
-                        {selectedCustomer.applicationDate}
+                        {selectedCustomer.createdAt}
                       </div>
                     </div>
 
@@ -960,7 +840,7 @@ export default function InstitutionalReviewBack() {
                         />
                       </svg>
                       <span>
-                        Verified on {selectedCustomer.applicationDate} through
+                        Verified on {selectedCustomer.createdAt} through
                         Self Protocol
                       </span>
                     </div>

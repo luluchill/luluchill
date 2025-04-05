@@ -4,6 +4,7 @@ import { PrismaClient } from "../../../../generated/prisma";
 const prisma = new PrismaClient();
 export async function GET(request: Request) {
   try {
+    
     const { searchParams } = new URL(request.url);
 
     const chainId = searchParams.get("chainId");
@@ -21,11 +22,20 @@ export async function GET(request: Request) {
       where: {
         [chainId === "80002"
           ? "attestationUidPolygon"
-          : "attestationUidHashkey"]: null,
+          : "attestationUidHashkey"]: null, // 根據 chainId 過濾
       },
     });
 
-    return NextResponse.json(users);
+    // 新增 status 欄位
+    const usersWithStatus = users.map(user => ({
+      ...user,
+      name: user.firstName + " " + user.lastName || "",
+      status: chainId === "80002"
+        ? (user.attestationUidPolygon ? "approved" : "pending")
+        : (user.attestationUidHashkey ? "approved" : "pending"),
+    }));
+    console.log(usersWithStatus);
+    return NextResponse.json(usersWithStatus); // 返回包含 status 的使用者
   } catch (error) {
     console.error(error);
     return NextResponse.json(
