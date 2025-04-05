@@ -4,17 +4,14 @@ const prisma = new PrismaClient();
 
 export async function POST(request: Request) {
   try {
-    const { ethAddress } = await request.json();
+    const { id } = await request.json();
 
-    if (!ethAddress) {
-      return NextResponse.json(
-        { error: "Ethereum address is required" },
-        { status: 400 }
-      );
+    if (!id) {
+      return NextResponse.json({ error: "Id is required" }, { status: 400 });
     }
 
     const user = await prisma.user.update({
-      where: { ethAddress },
+      where: { id },
       data: { isEasIssued: true },
     });
 
