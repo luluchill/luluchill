@@ -105,19 +105,6 @@ export default function InstitutionalReviewBack() {
     setShowApproveModal(false); // 關閉彈窗
   };
 
-  // Handle reject
-  const handleReject = (customerId) => {
-    // This is just simulating a frontend state change; in reality, you'd call an API
-    const updatedCustomers = customers.map((customer) => {
-      if (customer.id === customerId) {
-        return { ...customer, status: 'rejected' }
-      }
-      return customer
-    })
-    // In a real application, you'd send an API request here, then update the state
-    console.log(`Customer ${customerId} rejected`)
-    setSelectedCustomer(null)
-  }
 
   // Filter customer list
   const filteredCustomers = customers.filter((customer) => {
