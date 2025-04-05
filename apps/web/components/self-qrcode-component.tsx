@@ -52,7 +52,7 @@ export function SelfQrCodeComponent({
           endpoint: "https://luluchill.vercel.app/api/self/verify",
           endpointType: "staging_https",
           logoBase64:
-            "https://github.com/luluchill/luluchill/blob/main/apps/web/public/logo?raw=true.png",
+            "https://luluchill.vercel.app/logo.png",
           userIdType: "hex",
           userId: formattedUserId,
           disclosures: {
