@@ -1,5 +1,8 @@
 import { NextResponse } from "next/server";
 import { getUserIdentifier, SelfBackendVerifier } from "@selfxyz/core";
+import { PrismaClient } from "../../../../generated/prisma";
+
+const prisma = new PrismaClient();
 
 export async function POST(request: Request) {
   try {
@@ -14,7 +17,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const userId = await getUserIdentifier(publicSignals);
+    const userId = await getUserIdentifier(publicSignals, "hex");
 
     const configuredVerifier = new SelfBackendVerifier(
       "luluchill",
@@ -26,8 +29,19 @@ export async function POST(request: Request) {
     const result = await configuredVerifier.verify(proof, publicSignals);
 
     if (result.isValid) {
-      console.log("verify result: ", result);
-      // TODO: write `result.credentialSubject` to database
+      await prisma.user.create({
+        data: {
+          ethAddress: userId,
+          passportNumber: result.credentialSubject.passport_number!,
+          firstName: (result.credentialSubject.name! as any as string[])[0],
+          lastName: (result.credentialSubject.name! as any as string[])[1],
+          nationality: result.credentialSubject.nationality!,
+          olderThan: result.credentialSubject.older_than!,
+          passportNoOfac: result.credentialSubject.passport_no_ofac!,
+          attestationUidPolygon: null,
+          attestationUidHashkey: null,
+        },
+      });
 
       return NextResponse.json(
         { status: "success", result: result.isValid },
@@ -44,6 +58,7 @@ export async function POST(request: Request) {
       );
     }
   } catch (error) {
+    console.log(error);
     return NextResponse.json(
       {
         message: "Error verifying proof",
