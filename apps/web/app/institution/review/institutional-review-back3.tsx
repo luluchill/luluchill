@@ -109,6 +109,7 @@ export default function InstitutionalReviewBack() {
           `/api/user/list-no-attestation?chainId=${chainId}`,
         )
         const data = await response.json()
+        console.log(data)
         setCustomers(data) // 設定從 API 獲取的使用者資料
       } catch (error) {
         console.error('Failed to fetch customers:', error)
@@ -237,44 +238,40 @@ export default function InstitutionalReviewBack() {
             <div className="flex flex-wrap gap-2">
               <button
                 onClick={() => setFilterStatus('all')}
-                className={`px-3 py-1.5 rounded-md text-sm flex items-center ${
-                  filterStatus === 'all'
+                className={`px-3 py-1.5 rounded-md text-sm flex items-center ${filterStatus === 'all'
                     ? 'bg-[#2C2A25] text-white'
                     : 'bg-white text-[#2C2A25] border border-[#D4C19C]'
-                }`}
+                  }`}
               >
                 <RefreshCw className="h-3.5 w-3.5 mr-1.5" />
                 All ({totalCount})
               </button>
               <button
                 onClick={() => setFilterStatus('pending')}
-                className={`px-3 py-1.5 rounded-md text-sm flex items-center ${
-                  filterStatus === 'pending'
+                className={`px-3 py-1.5 rounded-md text-sm flex items-center ${filterStatus === 'pending'
                     ? 'bg-[#2C2A25] text-white'
                     : 'bg-white text-[#2C2A25] border border-[#D4C19C]'
-                }`}
+                  }`}
               >
                 <Clock className="h-3.5 w-3.5 mr-1.5" />
                 Pending ({pendingCount})
               </button>
               <button
                 onClick={() => setFilterStatus('approved')}
-                className={`px-3 py-1.5 rounded-md text-sm flex items-center ${
-                  filterStatus === 'approved'
+                className={`px-3 py-1.5 rounded-md text-sm flex items-center ${filterStatus === 'approved'
                     ? 'bg-[#2C2A25] text-white'
                     : 'bg-white text-[#2C2A25] border border-[#D4C19C]'
-                }`}
+                  }`}
               >
                 <CheckCircle className="h-3.5 w-3.5 mr-1.5" />
                 Approved ({approvedCount})
               </button>
               <button
                 onClick={() => setFilterStatus('rejected')}
-                className={`px-3 py-1.5 rounded-md text-sm flex items-center ${
-                  filterStatus === 'rejected'
+                className={`px-3 py-1.5 rounded-md text-sm flex items-center ${filterStatus === 'rejected'
                     ? 'bg-[#2C2A25] text-white'
                     : 'bg-white text-[#2C2A25] border border-[#D4C19C]'
-                }`}
+                  }`}
               >
                 <XCircle className="h-3.5 w-3.5 mr-1.5" />
                 Rejected ({rejectedCount})
@@ -415,7 +412,10 @@ export default function InstitutionalReviewBack() {
                       Customer ID
                     </th>
                     <th className="py-3 px-4 text-left text-xs font-medium">
-                      Customer Info
+                      Full Name
+                    </th>
+                    <th className="py-3 px-4 text-left text-xs font-medium">
+                      Password Number
                     </th>
                     <th className="py-3 px-4 text-left text-xs font-medium">
                       Wallet Address
@@ -445,6 +445,13 @@ export default function InstitutionalReviewBack() {
                         <div className="flex flex-col">
                           <span className="text-sm font-medium text-[#2C2A25]">
                             {customer.name}
+                          </span>
+                        </div>
+                      </td>
+                      <td className="py-3 px-4">
+                        <div className="flex flex-col">
+                          <span className="text-sm font-medium text-[#2C2A25]">
+                            {customer.passportNumber}
                           </span>
                         </div>
                       </td>
@@ -540,11 +547,10 @@ export default function InstitutionalReviewBack() {
                   <button
                     onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
                     disabled={currentPage === 1}
-                    className={`relative inline-flex items-center px-4 py-2 border border-[#D4C19C] text-sm font-medium rounded-md ${
-                      currentPage === 1
+                    className={`relative inline-flex items-center px-4 py-2 border border-[#D4C19C] text-sm font-medium rounded-md ${currentPage === 1
                         ? 'text-gray-400 bg-gray-100'
                         : 'text-[#2C2A25] bg-white hover:bg-[#F5F2EA]'
-                    }`}
+                      }`}
                   >
                     Previous
                   </button>
@@ -553,11 +559,10 @@ export default function InstitutionalReviewBack() {
                       setCurrentPage(Math.min(totalPages, currentPage + 1))
                     }
                     disabled={currentPage === totalPages}
-                    className={`relative inline-flex items-center px-4 py-2 border border-[#D4C19C] text-sm font-medium rounded-md ${
-                      currentPage === totalPages
+                    className={`relative inline-flex items-center px-4 py-2 border border-[#D4C19C] text-sm font-medium rounded-md ${currentPage === totalPages
                         ? 'text-gray-400 bg-gray-100'
                         : 'text-[#2C2A25] bg-white hover:bg-[#F5F2EA]'
-                    }`}
+                      }`}
                   >
                     Next
                   </button>
@@ -593,11 +598,10 @@ export default function InstitutionalReviewBack() {
                           setCurrentPage(Math.max(1, currentPage - 1))
                         }
                         disabled={currentPage === 1}
-                        className={`relative inline-flex items-center px-2 py-2 rounded-l-md border border-[#D4C19C] ${
-                          currentPage === 1
+                        className={`relative inline-flex items-center px-2 py-2 rounded-l-md border border-[#D4C19C] ${currentPage === 1
                             ? 'text-gray-400 bg-gray-100'
                             : 'text-[#2C2A25] bg-white hover:bg-[#F5F2EA]'
-                        }`}
+                          }`}
                       >
                         <span className="sr-only">Previous</span>
                         <svg
@@ -619,11 +623,10 @@ export default function InstitutionalReviewBack() {
                         <button
                           key={i}
                           onClick={() => setCurrentPage(i + 1)}
-                          className={`relative inline-flex items-center px-4 py-2 border border-[#D4C19C] text-sm font-medium ${
-                            currentPage === i + 1
+                          className={`relative inline-flex items-center px-4 py-2 border border-[#D4C19C] text-sm font-medium ${currentPage === i + 1
                               ? 'z-10 bg-[#2C2A25] text-white'
                               : 'bg-white text-[#2C2A25] hover:bg-[#F5F2EA]'
-                          }`}
+                            }`}
                         >
                           {i + 1}
                         </button>
@@ -634,11 +637,10 @@ export default function InstitutionalReviewBack() {
                           setCurrentPage(Math.min(totalPages, currentPage + 1))
                         }
                         disabled={currentPage === totalPages}
-                        className={`relative inline-flex items-center px-2 py-2 rounded-r-md border border-[#D4C19C] ${
-                          currentPage === totalPages
+                        className={`relative inline-flex items-center px-2 py-2 rounded-r-md border border-[#D4C19C] ${currentPage === totalPages
                             ? 'text-gray-400 bg-gray-100'
                             : 'text-[#2C2A25] bg-white hover:bg-[#F5F2EA]'
-                        }`}
+                          }`}
                       >
                         <span className="sr-only">Next</span>
                         <svg
@@ -848,15 +850,21 @@ export default function InstitutionalReviewBack() {
                     </div>
                     <div className="bg-white p-3 rounded-md">
                       <p className="text-xs text-gray-500 mb-1">Nationality</p>
-                      <p className="text-sm font-medium">Taiwan</p>
+                      <p className="text-sm font-medium">
+                        {selectedCustomer.nationality}
+                      </p>
                     </div>
                     <div className="bg-white p-3 rounded-md">
-                      <p className="text-xs text-gray-500 mb-1">Age</p>
-                      <p className="text-sm font-medium">35</p>
+                      <p className="text-xs text-gray-500 mb-1">Passport Number</p>
+                      <p className="text-sm font-medium">
+                        {selectedCustomer.passportNumber}
+                      </p>
                     </div>
                     <div className="bg-white p-3 rounded-md">
-                      <p className="text-xs text-gray-500 mb-1">Gender</p>
-                      <p className="text-sm font-medium">Male</p>
+                      <p className="text-xs text-gray-500 mb-1">OFAC</p>
+                      <p className="text-sm font-medium">
+                        {selectedCustomer.passportNoOfac ? 'No' : 'Yes'}
+                      </p>
                     </div>
                   </div>
 
