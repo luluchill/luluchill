@@ -11,7 +11,7 @@ export default function Home() {
   // 假設從某處獲取當前地址
   const currentAddress = "0x941AE41b7e08001c02C910f72CA465B07435903C";
   if (currentAddress === institutionAddress) {
-    redirect("/institution/dashboard"); // 如果是機構，直接重定向到 dashboard
+    redirect("/institution/review"); // 如果是機構，直接重定向到 dashboard
   }
 
   return (
