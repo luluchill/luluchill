@@ -31,7 +31,7 @@ type Property = {
 }
 import { ConnectWalletButton } from '@/components/connect-wallet-button'
 import { useReadContract } from 'wagmi'
-import { wagmiContractConfig } from "@/usdc.abi"
+import { usdcContractConfig } from "@/usdc.abi"
 import { luluchillRWAContractConfig } from "@/luluchillRWAToken.abi"
 import { poolContractConfig } from "@/pool.abi"
 
@@ -56,7 +56,7 @@ export default function RWAPlatform() {
 
 
   const { data: usdcBalanceData } = useReadContract({
-    ...wagmiContractConfig,
+    ...usdcContractConfig(chainId),
     functionName: "balanceOf",
     args: [address as `0x${string}`],
     query: {
@@ -69,7 +69,7 @@ export default function RWAPlatform() {
     : "Loading..."
 
   const { data: luluchillRWAToken } = useReadContract({
-    ...luluchillRWAContractConfig,
+    ...luluchillRWAContractConfig(chainId),
     functionName: "balanceOf",
     args: [address as `0x${string}`],
     query: {
@@ -117,7 +117,7 @@ export default function RWAPlatform() {
       agency: "LLCRWA",
       landArea: "38.78 Acre",
       landType: "Residential",
-      contract: luluchillRWAContractConfig.address,
+      contract: luluchillRWAContractConfig(chainId).address,
       tokenPrice: 120,
       priceChange: '+5.2%',
       trending: 'up',
@@ -131,7 +131,7 @@ export default function RWAPlatform() {
       agency: 'FPA',
       landArea: '14.22 Acre',
       landType: 'Commercial',
-      contract: luluchillRWAContractConfig.address,
+      contract: luluchillRWAContractConfig(chainId).address,
       tokenPrice: 1.58,
       priceChange: '+2.8%',
       trending: 'up',
@@ -145,7 +145,7 @@ export default function RWAPlatform() {
       agency: 'TBP',
       landArea: '73.26 Acre',
       landType: 'Residential',
-      contract: luluchillRWAContractConfig.address,
+      contract: luluchillRWAContractConfig(chainId).address,
       tokenPrice: 56,
       priceChange: '-1.3%',
       trending: 'down',
@@ -159,7 +159,7 @@ export default function RWAPlatform() {
       agency: 'DAR',
       landArea: '120.45 Acre',
       landType: 'Agricultural',
-      contract: luluchillRWAContractConfig.address,
+      contract: luluchillRWAContractConfig(chainId).address,
       tokenPrice: 11.55,
       priceChange: '+7.2%',
       trending: 'up',
@@ -225,7 +225,7 @@ export default function RWAPlatform() {
     }
 
     writeContract({
-      ...poolContractConfig,
+      ...poolContractConfig(chainId),
       functionName: "swap",
       args: [
         '0xd737545bE0FFcC4e3ACE1A9E664cA05e58F046f9' as `0x${string}`,
@@ -239,10 +239,10 @@ export default function RWAPlatform() {
   const handleApprove = () => {
 
     writeContract({
-      ...wagmiContractConfig,
+      ...usdcContractConfig(chainId),
       functionName: "approve",
       args: [
-        poolContractConfig.address, // Approve spender address
+        poolContractConfig(chainId).address, // Approve spender address
         ethers.MaxUint256
       ],
     });
@@ -282,7 +282,7 @@ export default function RWAPlatform() {
     }
 
     writeContract({
-      ...poolContractConfig,
+      ...poolContractConfig(chainId),
       functionName: "certifyUser",
       args: [address as `0x${string}`],
     });
