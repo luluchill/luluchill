@@ -22,6 +22,7 @@ const schemaUID =
   '0x66ceb27660877e18c3ed91f55b7a5aa9ba4d54aeb75c8a94a6df90aca219c4ca'
 import { useEthersSigner } from '../../../walletconnect-config' // 使用自定義的 signer hook
 import { ConnectWalletButton } from '@/components/connect-wallet-button'
+import Image from 'next/image'
 
 // 定義 User 型別
 type User = {
@@ -200,9 +201,18 @@ export default function InstitutionalReviewBack() {
       {/* Navigation Bar */}
       <header className="bg-[#2C2A25] text-white">
         <div className="container mx-auto flex items-center justify-between py-3 px-6">
-          <div className="flex items-center">
+          <div className="flex items-center gap-2">
+            <div className="rounded-full bg-white p-1">
+              <Image
+                src="/logo.png"
+                alt="Logo"
+                width={32}
+                height={32}
+                className="rounded-full"
+              />
+            </div>
             <span className="text-2xl font-bold text-[#D4C19C] whitespace-nowrap">
-              TOKENEST
+              luluchill
             </span>
             <span className="text-sm ml-2 text-[#D4C19C]">
               Institutional Review Panel

@@ -201,9 +201,18 @@ export default function RWAPlatform() {
       {/* Navigation Bar */}
       <header className="bg-primary text-white">
         <div className="container mx-auto flex items-center justify-between py-3 px-6">
-          <div className="flex items-center">
+          <div className="flex items-center gap-2">
+            <div className="rounded-full bg-white p-1">
+              <Image
+                src="/logo.png"
+                alt="Logo"
+                width={32}
+                height={32}
+                className="rounded-full"
+              />
+            </div>
             <span className="text-2xl font-bold text-accent whitespace-nowrap">
-              TOKENEST
+              luluchill
             </span>
             <span className="text-sm ml-2 text-accent">Real Estate Assets</span>
           </div>
