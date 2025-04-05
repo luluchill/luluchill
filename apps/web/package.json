@@ -10,7 +10,8 @@
     "lint": "next lint --max-warnings 0",
     "check-types": "tsc --noEmit",
     "db:build": "prisma generate",
-    "db:migration": "prisma migrate dev"
+    "db:migration": "prisma migrate dev",
+    "db:reset": "prisma migrate reset"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",

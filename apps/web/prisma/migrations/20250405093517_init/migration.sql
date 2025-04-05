@@ -9,7 +9,7 @@ CREATE TABLE "User" (
     "olderThan" TEXT NOT NULL,
     "nationality" TEXT NOT NULL,
     "passportNoOfac" BOOLEAN NOT NULL,
-    "isEasIssued" BOOLEAN NOT NULL DEFAULT false,
+    "attestationUid" TEXT,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );

@@ -4,7 +4,7 @@ const prisma = new PrismaClient();
 
 export async function POST(request: Request) {
   try {
-    const { id } = await request.json();
+    const { id, attestationUid } = await request.json();
 
     if (!id) {
       return NextResponse.json({ error: "Id is required" }, { status: 400 });
@@ -12,7 +12,7 @@ export async function POST(request: Request) {
 
     const user = await prisma.user.update({
       where: { id },
-      data: { isEasIssued: true },
+      data: { attestationUid },
     });
 
     return NextResponse.json({ message: "User verified successfully", user });
