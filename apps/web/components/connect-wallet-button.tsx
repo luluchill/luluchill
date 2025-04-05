@@ -18,7 +18,10 @@ export function ConnectWalletButton() {
     return (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="outline" className="gap-2">
+          <Button
+            variant="outline"
+            className="flex items-center py-2 px-4 bg-[#D4C19C] text-[#2C2A25] hover:bg-[#C4B18B] transition-colors rounded-md"
+          >
             <Wallet className="h-4 w-4" />
             {address.substring(0, 6)}...{address.substring(address.length - 4)}
           </Button>
