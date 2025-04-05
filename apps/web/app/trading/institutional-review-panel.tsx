@@ -254,7 +254,22 @@ export default function RWAPlatform() {
       if (!address) return;
   
       try {
-        const response = await fetch(`/api/user/get-attestation-uid?chainId=${chainId}&ethAddress=${address}`, {
+
+
+        let formatted = address.toLowerCase()
+        if (!formatted.startsWith("0x")) {
+          formatted = `0x${formatted}`
+        }
+
+        // Pad the address if needed (Self Protocol expects a full-length address)
+        if (formatted.length < 42) {
+          const paddingNeeded = 42 - formatted.length
+          const padding = "0".repeat(paddingNeeded - 2) // -2 for the '0x' prefix
+          formatted = `0x${padding}${formatted.substring(2)}`
+        }
+
+
+        const response = await fetch(`/api/user/get-attestation-uid?chainId=${chainId}&ethAddress=${formatted}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -275,15 +290,15 @@ export default function RWAPlatform() {
   }, [address]);
 
   const handleCertifyUser = () => {
-    if (!address) {
-      console.error("Wallet not connected");
+    if (!attestationUID) {
+      console.error("attestationUID not found");
       return;
     }
 
     writeContract({
       ...poolContractConfig(chainId),
       functionName: "certifyUser",
-      args: [address as `0x${string}`],
+      args: [attestationUID as `0x${string}`],
     });
   };
 
