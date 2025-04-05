@@ -47,7 +47,7 @@ export function SelfQrCodeComponent({
       try {
         const { SelfAppBuilder } = await import("@selfxyz/qrcode");
         const app = new SelfAppBuilder({
-          appName: "luluChill",
+          appName: "luluchill",
           scope: "luluchill",
           endpoint: "https://luluchill.vercel.app/api/self/verify",
           endpointType: "staging_https",
