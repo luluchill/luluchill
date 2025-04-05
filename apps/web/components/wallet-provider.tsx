@@ -1,61 +1,14 @@
 'use client'
 import { createContext, useContext, type ReactNode } from 'react'
 import { useAccount, useDisconnect } from 'wagmi'
-import { wagmiAdapter, projectId } from '../../web/rainbowkit-config'
+import { wagmiAdapter, projectId, polygonAmoy, hashKeyChainTestnet } from '../../web/rainbowkit-config'
 import { createAppKit } from '@reown/appkit/react'
-import { polygon, defineChain } from '@reown/appkit/networks'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { cookieToInitialState, WagmiProvider, type Config } from 'wagmi'
 
 // 創建 QueryClient
 const queryClient = new QueryClient()
 
-// 定義 HashKey Chain Testnet
-const hashKeyChainTestnet = defineChain({
-  id: 133,
-  caipNetworkId: 'eip155:133',
-  chainNamespace: 'eip155',
-  name: 'HashKey Chain Testnet',
-  nativeCurrency: {
-    decimals: 18,
-    name: 'HSK',
-    symbol: 'HSK',
-  },
-  rpcUrls: {
-    default: {
-      http: ['https://hashkeychain-testnet.alt.technology'],
-    },
-  },
-  blockExplorers: {
-    default: {
-      name: 'HashKeyScan',
-      url: 'https://hashkeychain-testnet-explorer.alt.technology',
-    },
-  },
-  testnet: true,
-})
-
-// 定義 Polygon Amoy 測試網
-const polygonAmoy = defineChain({
-  id: 80002,
-  caipNetworkId: 'eip155:80002',
-  chainNamespace: 'eip155',
-  name: 'Amoy',
-  nativeCurrency: {
-    decimals: 18,
-    name: 'POL',
-    symbol: 'POL',
-  },
-  rpcUrls: {
-    default: {
-      http: ['https://rpc-amoy.polygon.technology/'],
-    },
-  },
-  blockExplorers: {
-    default: { name: 'PolygonScan', url: 'https://amoy.polygonscan.com' },
-  },
-  testnet: true,
-})
 
 // 設置元數據
 const metadata = {
@@ -69,8 +22,8 @@ const metadata = {
 const modal = createAppKit({
   adapters: [wagmiAdapter],
   projectId,
-  networks: [polygon, polygonAmoy, hashKeyChainTestnet], // 添加自定義網路
-  defaultNetwork: polygon,
+  networks: [polygonAmoy, hashKeyChainTestnet], // 添加自定義網路
+  defaultNetwork: polygonAmoy,
   metadata: metadata,
   features: {
     analytics: true,
