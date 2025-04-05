@@ -48,7 +48,7 @@ export async function GET(request: Request) {
 
     return NextResponse.json({ attestationUid });
   } catch (error) {
-    console.error("Error fetching user:", error);
+    console.error(error);
     return NextResponse.json(
       { error: "Internal Server Error" },
       { status: 500 }

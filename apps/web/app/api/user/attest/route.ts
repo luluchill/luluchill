@@ -31,11 +31,11 @@ export async function POST(request: Request) {
       data,
     });
 
-    return NextResponse.json({ message: "User verified successfully", user });
+    return NextResponse.json({ message: "Success" });
   } catch (error) {
     console.error(error);
     return NextResponse.json(
-      { error: "Failed to verify user" },
+      { error: "Internal Server Error" },
       { status: 500 }
     );
   }
