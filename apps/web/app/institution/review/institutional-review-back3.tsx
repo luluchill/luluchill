@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation'; // 使用 next/navigation 進行重定向
 import { useAccount, useConnect } from 'wagmi'; // 使用 wagmi 來管理錢包
 import {
-  Wallet,
   UserCheck,
   UserX,
   Search,
@@ -16,6 +15,7 @@ import {
   Calendar,
   RefreshCw,
 } from 'lucide-react';
+import { ConnectWalletButton } from '@/components/connect-wallet-button'
 
 export default function InstitutionalReviewBack() {
   const { address, isConnected } = useAccount(); // 獲取當前錢包地址和連接狀態
@@ -253,7 +253,10 @@ export default function InstitutionalReviewBack() {
   const totalCount = customers.length
 
   return (
-    <div className="flex flex-col min-h-screen" style={{ backgroundColor: '#F5F2EA', color: '#2C2A25' }}>
+    <div
+      className="flex flex-col min-h-screen"
+      style={{ backgroundColor: '#F5F2EA', color: '#2C2A25' }}
+    >
       {/* Navigation Bar */}
       <header className="bg-[#2C2A25] text-white">
         <div className="container mx-auto flex items-center justify-between py-3 px-6">
@@ -265,29 +268,17 @@ export default function InstitutionalReviewBack() {
               Institutional Review Panel
             </span>
           </div>
-
+          <ConnectWalletButton />
           {/* Updated Wallet Connection */}
-          <div className="flex items-center space-x-4">
-            {isConnected ? (
-              <button className="flex items-center py-2 px-4 bg-[#D4C19C] text-[#2C2A25] hover:bg-[#C4B18B] transition-colors rounded-md">
-                <Wallet className="h-4 w-4 mr-2" />
-                <span>{address}</span>
-              </button>
-            ) : (
-              <button
-                onClick={() => connect({ connector: connectors[0] })} // 修正傳遞正確的參數
-                className="flex items-center py-2 px-4 bg-[#D4C19C] text-[#2C2A25] hover:bg-[#C4B18B] transition-colors rounded-md"
-              >
-                <Wallet className="h-4 w-4 mr-2" />
-                <span>Connect Wallet</span>
-              </button>
-            )}
-          </div>
-        </div>
-      </header>
+        </div >
+      </header >
 
       {/* Main Content */}
-      <div className="flex-1 py-6" style={{ backgroundColor: '#F5F2EA', color: '#2C2A25' }}>
+      < div
+        className="flex-1 py-6"
+        style={{ backgroundColor: '#F5F2EA', color: '#2C2A25' }
+        }
+      >
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-6">
             <h1 className="text-2xl font-bold text-[#2C2A25] mb-4 md:mb-0">
@@ -296,44 +287,40 @@ export default function InstitutionalReviewBack() {
             <div className="flex flex-wrap gap-2">
               <button
                 onClick={() => setFilterStatus('all')}
-                className={`px-3 py-1.5 rounded-md text-sm flex items-center ${
-                  filterStatus === 'all'
-                    ? 'bg-[#2C2A25] text-white'
-                    : 'bg-white text-[#2C2A25] border border-[#D4C19C]'
-                }`}
+                className={`px-3 py-1.5 rounded-md text-sm flex items-center ${filterStatus === 'all'
+                  ? 'bg-[#2C2A25] text-white'
+                  : 'bg-white text-[#2C2A25] border border-[#D4C19C]'
+                  }`}
               >
                 <RefreshCw className="h-3.5 w-3.5 mr-1.5" />
                 All ({totalCount})
               </button>
               <button
                 onClick={() => setFilterStatus('pending')}
-                className={`px-3 py-1.5 rounded-md text-sm flex items-center ${
-                  filterStatus === 'pending'
-                    ? 'bg-[#2C2A25] text-white'
-                    : 'bg-white text-[#2C2A25] border border-[#D4C19C]'
-                }`}
+                className={`px-3 py-1.5 rounded-md text-sm flex items-center ${filterStatus === 'pending'
+                  ? 'bg-[#2C2A25] text-white'
+                  : 'bg-white text-[#2C2A25] border border-[#D4C19C]'
+                  }`}
               >
                 <Clock className="h-3.5 w-3.5 mr-1.5" />
                 Pending ({pendingCount})
               </button>
               <button
                 onClick={() => setFilterStatus('approved')}
-                className={`px-3 py-1.5 rounded-md text-sm flex items-center ${
-                  filterStatus === 'approved'
-                    ? 'bg-[#2C2A25] text-white'
-                    : 'bg-white text-[#2C2A25] border border-[#D4C19C]'
-                }`}
+                className={`px-3 py-1.5 rounded-md text-sm flex items-center ${filterStatus === 'approved'
+                  ? 'bg-[#2C2A25] text-white'
+                  : 'bg-white text-[#2C2A25] border border-[#D4C19C]'
+                  }`}
               >
                 <CheckCircle className="h-3.5 w-3.5 mr-1.5" />
                 Approved ({approvedCount})
               </button>
               <button
                 onClick={() => setFilterStatus('rejected')}
-                className={`px-3 py-1.5 rounded-md text-sm flex items-center ${
-                  filterStatus === 'rejected'
-                    ? 'bg-[#2C2A25] text-white'
-                    : 'bg-white text-[#2C2A25] border border-[#D4C19C]'
-                }`}
+                className={`px-3 py-1.5 rounded-md text-sm flex items-center ${filterStatus === 'rejected'
+                  ? 'bg-[#2C2A25] text-white'
+                  : 'bg-white text-[#2C2A25] border border-[#D4C19C]'
+                  }`}
               >
                 <XCircle className="h-3.5 w-3.5 mr-1.5" />
                 Rejected ({rejectedCount})
@@ -613,11 +600,10 @@ export default function InstitutionalReviewBack() {
                   <button
                     onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
                     disabled={currentPage === 1}
-                    className={`relative inline-flex items-center px-4 py-2 border border-[#D4C19C] text-sm font-medium rounded-md ${
-                      currentPage === 1
-                        ? 'text-gray-400 bg-gray-100'
-                        : 'text-[#2C2A25] bg-white hover:bg-[#F5F2EA]'
-                    }`}
+                    className={`relative inline-flex items-center px-4 py-2 border border-[#D4C19C] text-sm font-medium rounded-md ${currentPage === 1
+                      ? 'text-gray-400 bg-gray-100'
+                      : 'text-[#2C2A25] bg-white hover:bg-[#F5F2EA]'
+                      }`}
                   >
                     Previous
                   </button>
@@ -626,11 +612,10 @@ export default function InstitutionalReviewBack() {
                       setCurrentPage(Math.min(totalPages, currentPage + 1))
                     }
                     disabled={currentPage === totalPages}
-                    className={`relative inline-flex items-center px-4 py-2 border border-[#D4C19C] text-sm font-medium rounded-md ${
-                      currentPage === totalPages
-                        ? 'text-gray-400 bg-gray-100'
-                        : 'text-[#2C2A25] bg-white hover:bg-[#F5F2EA]'
-                    }`}
+                    className={`relative inline-flex items-center px-4 py-2 border border-[#D4C19C] text-sm font-medium rounded-md ${currentPage === totalPages
+                      ? 'text-gray-400 bg-gray-100'
+                      : 'text-[#2C2A25] bg-white hover:bg-[#F5F2EA]'
+                      }`}
                   >
                     Next
                   </button>
@@ -666,11 +651,10 @@ export default function InstitutionalReviewBack() {
                           setCurrentPage(Math.max(1, currentPage - 1))
                         }
                         disabled={currentPage === 1}
-                        className={`relative inline-flex items-center px-2 py-2 rounded-l-md border border-[#D4C19C] ${
-                          currentPage === 1
-                            ? 'text-gray-400 bg-gray-100'
-                            : 'text-[#2C2A25] bg-white hover:bg-[#F5F2EA]'
-                        }`}
+                        className={`relative inline-flex items-center px-2 py-2 rounded-l-md border border-[#D4C19C] ${currentPage === 1
+                          ? 'text-gray-400 bg-gray-100'
+                          : 'text-[#2C2A25] bg-white hover:bg-[#F5F2EA]'
+                          }`}
                       >
                         <span className="sr-only">Previous</span>
                         <svg
@@ -692,11 +676,10 @@ export default function InstitutionalReviewBack() {
                         <button
                           key={i}
                           onClick={() => setCurrentPage(i + 1)}
-                          className={`relative inline-flex items-center px-4 py-2 border border-[#D4C19C] text-sm font-medium ${
-                            currentPage === i + 1
-                              ? 'z-10 bg-[#2C2A25] text-white'
-                              : 'bg-white text-[#2C2A25] hover:bg-[#F5F2EA]'
-                          }`}
+                          className={`relative inline-flex items-center px-4 py-2 border border-[#D4C19C] text-sm font-medium ${currentPage === i + 1
+                            ? 'z-10 bg-[#2C2A25] text-white'
+                            : 'bg-white text-[#2C2A25] hover:bg-[#F5F2EA]'
+                            }`}
                         >
                           {i + 1}
                         </button>
@@ -707,11 +690,10 @@ export default function InstitutionalReviewBack() {
                           setCurrentPage(Math.min(totalPages, currentPage + 1))
                         }
                         disabled={currentPage === totalPages}
-                        className={`relative inline-flex items-center px-2 py-2 rounded-r-md border border-[#D4C19C] ${
-                          currentPage === totalPages
-                            ? 'text-gray-400 bg-gray-100'
-                            : 'text-[#2C2A25] bg-white hover:bg-[#F5F2EA]'
-                        }`}
+                        className={`relative inline-flex items-center px-2 py-2 rounded-r-md border border-[#D4C19C] ${currentPage === totalPages
+                          ? 'text-gray-400 bg-gray-100'
+                          : 'text-[#2C2A25] bg-white hover:bg-[#F5F2EA]'
+                          }`}
                       >
                         <span className="sr-only">Next</span>
                         <svg
@@ -735,73 +717,74 @@ export default function InstitutionalReviewBack() {
             )}
           </div>
         </div>
-      </div>
+      </div >
 
       {/* Customer Detail Modal */}
-      {selectedCustomer && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center">
-          <div
-            className="absolute inset-0 bg-black bg-opacity-70"
-            onClick={() => setSelectedCustomer(null)}
-          ></div>
-          <div className="relative bg-white rounded-lg overflow-hidden w-full max-w-5xl mx-4 flex flex-col">
-            {/* Header */}
-            <div className="flex justify-between items-center bg-[#2C2A25] text-white p-4">
-              <h2 className="text-lg font-semibold">Customer Details</h2>
-              <button
-                onClick={() => setSelectedCustomer(null)}
-                className="text-white hover:text-gray-300"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
+      {
+        selectedCustomer && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center">
+            <div
+              className="absolute inset-0 bg-black bg-opacity-70"
+              onClick={() => setSelectedCustomer(null)}
+            ></div>
+            <div className="relative bg-white rounded-lg overflow-hidden w-full max-w-5xl mx-4 flex flex-col">
+              {/* Header */}
+              <div className="flex justify-between items-center bg-[#2C2A25] text-white p-4">
+                <h2 className="text-lg font-semibold">Customer Details</h2>
+                <button
+                  onClick={() => setSelectedCustomer(null)}
+                  className="text-white hover:text-gray-300"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
-              </button>
-            </div>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
+              </div>
 
-            {/* Content */}
-            <div className="p-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {/* Basic Information - Left Side */}
-                <div>
-                  <h3 className="text-xl font-semibold text-[#2C2A25] mb-4 pb-2 border-b border-gray-200">
-                    Basic Information
-                  </h3>
-                  <div className="space-y-3">
-                    <div className="flex">
-                      <div className="w-1/3 text-gray-500">Customer ID</div>
-                      <div className="w-2/3 font-medium">
-                        {selectedCustomer.id.toString().padStart(6, '0')}
+              {/* Content */}
+              <div className="p-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  {/* Basic Information - Left Side */}
+                  <div>
+                    <h3 className="text-xl font-semibold text-[#2C2A25] mb-4 pb-2 border-b border-gray-200">
+                      Basic Information
+                    </h3>
+                    <div className="space-y-3">
+                      <div className="flex">
+                        <div className="w-1/3 text-gray-500">Customer ID</div>
+                        <div className="w-2/3 font-medium">
+                          {selectedCustomer.id.toString().padStart(6, '0')}
+                        </div>
                       </div>
-                    </div>
 
-                    <div className="flex">
-                      <div className="w-1/3 text-gray-500">Name</div>
-                      <div className="w-2/3 font-medium">
-                        {selectedCustomer.name}
+                      <div className="flex">
+                        <div className="w-1/3 text-gray-500">Name</div>
+                        <div className="w-2/3 font-medium">
+                          {selectedCustomer.name}
+                        </div>
                       </div>
-                    </div>
 
-                    <div className="flex">
-                      <div className="w-1/3 text-gray-500">Email</div>
-                      <div className="w-2/3 font-medium">
-                        {selectedCustomer.email}
+                      <div className="flex">
+                        <div className="w-1/3 text-gray-500">Email</div>
+                        <div className="w-2/3 font-medium">
+                          {selectedCustomer.email}
+                        </div>
                       </div>
-                    </div>
 
-                    <div className="flex">
-                      <div className="w-1/3 text-gray-500">Wallet Address</div>
-                      <div className="w-2/3 font-medium"></div>
+                      <div className="flex">
+                        <div className="w-1/3 text-gray-500">Wallet Address</div>
+                        <div className="w-2/3 font-medium"></div>
                         <div className="flex items-center">
                           <span
                             className="font-mono bg-gray-100 p-1 rounded text-xs truncate max-w-[200px] md:max-w-[280px]"
@@ -837,9 +820,7 @@ export default function InstitutionalReviewBack() {
                     </div>
 
                     <div className="flex">
-                      <div className="w-1/3 text-gray-500">
-                        Application Date
-                      </div>
+                      <div className="w-1/3 text-gray-500">Application Date</div>
                       <div className="w-2/3 font-medium">
                         {selectedCustomer.applicationDate}
                       </div>
@@ -929,9 +910,7 @@ export default function InstitutionalReviewBack() {
                         </p>
                       </div>
                       <div className="bg-white p-3 rounded-md">
-                        <p className="text-xs text-gray-500 mb-1">
-                          Nationality
-                        </p>
+                        <p className="text-xs text-gray-500 mb-1">Nationality</p>
                         <p className="text-sm font-medium">Taiwan</p>
                       </div>
                       <div className="bg-white p-3 rounded-md">
@@ -1010,8 +989,9 @@ export default function InstitutionalReviewBack() {
                 </>
               )}
             </div>
-        </div>
-      )}
-    </div>
+          </div>
+        )
+      }
+    </div >
   )
 }
