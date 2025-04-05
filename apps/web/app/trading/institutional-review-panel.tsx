@@ -14,11 +14,30 @@ import {
   ArrowUpDown
 } from "lucide-react"
 import Image from "next/image"
+type Property = {
+  id: number
+  name: string
+  abbr: string
+  agency: string
+  location: {
+    county: string
+    township: string
+  }
+  landArea: string
+  landType: string
+  contract: string
+  tokenPrice: number
+  priceChange: string
+  trending: "up" | "down"
+  totalTokens: number
+  totalValue: number
+}
 
 export default function RWAPlatform() {
   const [walletConnected, setWalletConnected] = useState(false)
   const [showModal, setShowModal] = useState(false)
-  const [selectedProperty, setSelectedProperty] = useState(null)
+  const [selectedProperty, setSelectedProperty] = useState<Property | null>(null)
+
   const [currentSlide, setCurrentSlide] = useState(0)
   const [usdtAmount, setUsdtAmount] = useState(0)
   const [tokenQuantity, setTokenQuantity] = useState(0)
@@ -126,7 +145,7 @@ export default function RWAPlatform() {
 
   // Create empty placeholder rows if needed to always have 5 rows
   const createPlaceholderRows = (count) => {
-    const placeholders = []
+    const placeholders: any[] = []
     for (let i = 0; i < count; i++) {
       placeholders.push({
         id: `placeholder-${i}`,
@@ -568,7 +587,7 @@ export default function RWAPlatform() {
                 <div className="relative h-[250px] rounded-lg overflow-hidden">
                   <Image
                     src="/placeholder.svg?height=300&width=600"
-                    alt={`${selectedProperty.name} - Image ${currentSlide + 1}`}
+                    alt={`${(selectedProperty as any).name} - Image ${currentSlide + 1}`}
                     fill
                     className="object-cover"
                   />
@@ -597,7 +616,7 @@ export default function RWAPlatform() {
 
                 <div className="mt-2">
                   <h2 className="text-lg font-bold text-[#2C2A25]">
-                    {selectedProperty.name}{" "}
+                    {(selectedProperty as any).name}{" "}
                     <span className="text-sm font-normal text-gray-500">({selectedProperty.abbr})</span>
                   </h2>
 
