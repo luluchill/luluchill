@@ -26,13 +26,6 @@ export default function Home() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild size="lg" className="gap-2">
-              <Link href="/institution/register">
-                <Building className="h-5 w-5" />
-                Register as Institution
-                <ArrowRight className="h-4 w-4 ml-1" />
-              </Link>
-            </Button>
             <Button asChild size="lg" variant="outline" className="gap-2">
               <Link href="/user/register">
                 <Wallet className="h-5 w-5" />
