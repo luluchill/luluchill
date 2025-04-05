@@ -14,7 +14,7 @@ import {
   ArrowUpDown
 } from "lucide-react"
 import Image from "next/image"
-import { useAccount, useBlockNumber, useReadContracts, useWriteContract } from "wagmi"
+import { useAccount, useBlockNumber, useChainId, useReadContracts, useWriteContract } from "wagmi"
 type Property = {
   id: number
   name: string
@@ -50,7 +50,7 @@ export default function RWAPlatform() {
   const [showGainers, setShowGainers] = useState(true)
   const { address, isConnected } = useAccount(); // 獲取當前錢包地址和連接狀態
 
-
+  const chainId = useChainId(); // 獲取當前鏈 ID
   const { data: hash, writeContract } = useWriteContract()
 
 
@@ -248,6 +248,46 @@ export default function RWAPlatform() {
     });
   };
 
+  const [attestationUID, setAttestationUID] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchAttestationUID = async () => {
+      if (!address) return;
+  
+      try {
+        const response = await fetch(`/api/user/get-attestation-uid?chainId=${chainId}&ethAddress=${address}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+  
+        const data = await response.json();
+  
+        if (data.attestationUid) {
+          setAttestationUID(data.attestationUid);
+        }
+      } catch (error) {
+        console.error("Error fetching attestation UID:", error);
+      }
+    };
+  
+    fetchAttestationUID();
+  }, [address]);
+
+  const handleCertifyUser = () => {
+    if (!address) {
+      console.error("Wallet not connected");
+      return;
+    }
+
+    writeContract({
+      ...poolContractConfig,
+      functionName: "certifyUser",
+      args: [address as `0x${string}`],
+    });
+  };
+
   return (
     <div className="flex flex-col min-h-screen">
       {/* Navigation Bar */}
@@ -288,16 +328,34 @@ export default function RWAPlatform() {
               RWA Token: <span className="font-bold">{formattedLuluchillRWATokenBalance?.toString() || "Loading..."}</span>
             </p>
 
-            {/* Approve USDC Section */}
-            <div className="mt-4">
-              <h3 className="text-base font-bold text-primary mb-2">Approve USDC</h3>
-              <button
-                onClick={handleApprove}
-                className="py-1.5 px-3 bg-primary text-white hover:bg-primary/80 transition-colors rounded-md flex items-center justify-center text-sm"
-              >
-                Approve
-              </button>
+            <p className="text-lg">
+              Attestation UID: <span className="font-bold">{attestationUID || "Loading..."}</span>
+            </p>
+
+            <div className="mt-4 flex gap-8">
+              {/* Approve USDC Section */}
+              <div>
+                <h3 className="text-base font-bold text-primary mb-2">Approve USDC</h3>
+                <button
+                  onClick={handleApprove}
+                  className="py-1.5 px-3 bg-primary text-white hover:bg-primary/80 transition-colors rounded-md flex items-center justify-center text-sm"
+                >
+                  Approve
+                </button>
+              </div>
+
+              {/* Certify User Section */}
+              <div>
+                <h3 className="text-base font-bold text-primary mb-2">Certify User</h3>
+                <button
+                  onClick={handleCertifyUser}
+                  className="py-1.5 px-3 bg-primary text-white hover:bg-primary/80 transition-colors rounded-md flex items-center justify-center text-sm"
+                >
+                  Certify
+                </button>
+              </div>
             </div>
+
           </>
 
         ) : (
