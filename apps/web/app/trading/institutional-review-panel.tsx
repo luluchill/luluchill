@@ -81,6 +81,11 @@ export default function RWAPlatform() {
     },
   })
 
+  const formattedLuluchillRWATokenBalance = luluchillRWAToken
+    ? (Number(luluchillRWAToken.toString()) / 1e18).toFixed(2)
+    : "Loading..."
+
+
   const { data: blockNumber } = useBlockNumber({ watch: true })
   
   const connectWallet = () => {
@@ -233,6 +238,36 @@ export default function RWAPlatform() {
     return top5
   }
 
+  const handleSwap = () => {
+    if (!usdtAmount || usdtAmount <= 0) {
+      console.error("Invalid USDT amount");
+      return;
+    }
+  
+    writeContract({
+      ...poolContractConfig,
+      functionName: "swap",
+      args: [
+        '0xd737545bE0FFcC4e3ACE1A9E664cA05e58F046f9' as `0x${string}`,
+        ethers.parseUnits(usdtAmount.toString(), 6), // 使用動態計算的 USDT 數量
+      ],
+    });
+
+
+  };
+
+  const handleApprove = () => {
+
+    writeContract({
+      ...wagmiContractConfig,
+      functionName: "approve",
+      args: [
+        poolContractConfig.address, // Approve spender address
+        ethers.MaxUint256
+      ],
+    });
+  };
+
   return (
     <div className="flex flex-col min-h-screen">
       {/* Navigation Bar */}
@@ -263,14 +298,27 @@ export default function RWAPlatform() {
         {isConnected ? (
           <>
             <p className="text-lg">
-              Balance: <span className="font-bold">{formattedUsdcBalance} USDC</span>
-            </p>
-            <p className="text-lg">
               BlockNumber: <span className="font-bold">{blockNumber?.toString() || "Loading..."}</span>
             </p>
+
             <p className="text-lg">
-              RWA Token: <span className="font-bold">{luluchillRWAToken?.toString() || "Loading..."}</span>
+              USDC : <span className="font-bold">{formattedUsdcBalance} USDC</span>
             </p>
+
+            <p className="text-lg">
+              RWA Token: <span className="font-bold">{formattedLuluchillRWATokenBalance?.toString() || "Loading..."}</span>
+            </p>
+            
+            {/* Approve USDC Section */}
+            <div className="mt-4">
+              <h3 className="text-base font-bold text-primary mb-2">Approve USDC</h3>
+              <button
+                onClick={handleApprove}
+                className="py-1.5 px-3 bg-primary text-white hover:bg-primary/80 transition-colors rounded-md flex items-center justify-center text-sm"
+              >
+                Approve
+              </button>
+            </div>
           </>
 
         ) : (
@@ -563,10 +611,9 @@ export default function RWAPlatform() {
                         type="number"
                         value={usdtAmount}
                         onChange={(e) => {
-                          const usdtAmount =
-                            Number.parseFloat(e.target.value) || 0
-                          setUsdtAmount(usdtAmount)
-                          setTokenQuantity(usdtAmount * 90909090909 / 1e18)
+                          const amount = Number.parseFloat(e.target.value) || 0;
+                          setUsdtAmount(amount);
+                          setTokenQuantity(amount * 0.99 ); // 動態更新 Token 數量
                         }}
                         className="bg-transparent outline-none flex-1 text-base font-medium"
                         placeholder="0.0"
@@ -603,15 +650,11 @@ export default function RWAPlatform() {
                       <input
                         type="number"
                         value={tokenQuantity}
-                        onChange={(e) => {
-                          setTokenQuantity(
-                            Number.parseFloat(e.target.value) || 0,
-                          )
-                          setUsdtAmount(
-                            Number.parseFloat(e.target.value) *
-                              selectedProperty.tokenPrice,
-                          )
-                        }}
+                        // onChange={(e) => {
+                        //   const quantity = Number.parseFloat(e.target.value) || 0;
+                        //   setTokenQuantity(quantity);
+                        //   setUsdtAmount(quantity / Number(usdtToRWANormalRate)); // 動態更新 USDT 數量
+                        // }}
                         className="bg-transparent outline-none flex-1 text-base font-medium"
                         placeholder="0.0"
                       />
@@ -698,18 +741,7 @@ export default function RWAPlatform() {
                     Cancel
                   </button>
                   <button className="py-1.5 px-3 bg-primary text-white hover:bg-primary/80 transition-colors rounded-md flex items-center justify-center text-sm"
-                    onClick={() => {
-                      // Handle swap logic here
-                      console.log("Swapping tokens...")
-
-                      writeContract({
-                        ...poolContractConfig,
-                        functionName: 'swap',
-                        args: [address as `0x${string}`, ethers.toBigInt(1)],
-                      })
-
-
-                    }}>
+                    onClick={handleSwap}>
                     
                     <ShoppingCart className="h-3.5 w-3.5 mr-1" />
                     <span>Swap</span>
