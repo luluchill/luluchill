@@ -82,7 +82,6 @@ export default function RWAPlatform() {
     : "Loading..."
 
 
-  const { data: blockNumber } = useBlockNumber({ watch: true })
 
   const connectWallet = () => {
     setWalletConnected(true)
@@ -316,9 +315,7 @@ export default function RWAPlatform() {
         <h2 className="text-xl font-bold mb-4">USDC Balance</h2>
         {isConnected ? (
           <>
-            <p className="text-lg">
-              BlockNumber: <span className="font-bold">{blockNumber?.toString() || "Loading..."}</span>
-            </p>
+
 
             <p className="text-lg">
               USDC : <span className="font-bold">{formattedUsdcBalance} USDC</span>
