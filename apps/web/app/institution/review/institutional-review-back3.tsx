@@ -1,6 +1,8 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation'; // 使用 next/navigation 進行重定向
+import { useAccount, useConnect } from 'wagmi'; // 使用 wagmi 來管理錢包
 import {
   Wallet,
   UserCheck,
@@ -13,12 +15,20 @@ import {
   ChevronDown,
   Calendar,
   RefreshCw,
-} from 'lucide-react'
-
-import { useWallet } from "@/components/wallet-provider"  // 假設 wallet-provider 是您專案中的錢包提供者
+} from 'lucide-react';
 
 export default function InstitutionalReviewBack() {
-  const { isConnected, connect, address } = useWallet() // 使用 wallet-provider 提供的功能
+  const { address, isConnected } = useAccount(); // 獲取當前錢包地址和連接狀態
+  const { connect, connectors } = useConnect(); // 用於連接錢包
+  const router = useRouter();
+  const institutionAddress = "0x941AE41b7e08001c02C910f72CA465B07435903C";
+
+  useEffect(() => {
+    if (!isConnected || address !== institutionAddress) {
+      router.push('/'); // 若未連接錢包或地址不符合，重定向到首頁
+    }
+  }, [isConnected, address, router]);
+
   const [filterStatus, setFilterStatus] = useState('all')
   const [showFilters, setShowFilters] = useState(false)
   const [selectedCustomer, setSelectedCustomer] = useState<{
@@ -265,7 +275,7 @@ export default function InstitutionalReviewBack() {
               </button>
             ) : (
               <button
-                onClick={connect}
+                onClick={() => connect({ connector: connectors[0] })} // 修正傳遞正確的參數
                 className="flex items-center py-2 px-4 bg-[#D4C19C] text-[#2C2A25] hover:bg-[#C4B18B] transition-colors rounded-md"
               >
                 <Wallet className="h-4 w-4 mr-2" />
