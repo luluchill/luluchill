@@ -1,6 +1,5 @@
 import { cookieStorage, createStorage, http } from '@wagmi/core'
 import { WagmiAdapter } from '@reown/appkit-adapter-wagmi'
-import { mainnet, arbitrum } from '@reown/appkit/networks'
 import { polygon, defineChain } from '@reown/appkit/networks'
 // Get projectId from https://cloud.reown.com
 export const projectId = '5e693ef23579098865c56161ffb25293'

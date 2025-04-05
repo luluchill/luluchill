@@ -1,14 +1,18 @@
 'use client'
 import { createContext, useContext, type ReactNode } from 'react'
 import { useAccount, useDisconnect } from 'wagmi'
-import { wagmiAdapter, projectId, polygonAmoy, hashKeyChainTestnet } from '../../web/rainbowkit-config'
+import {
+  wagmiAdapter,
+  projectId,
+  polygonAmoy,
+  hashKeyChainTestnet,
+} from '../../web/walletconnect-config'
 import { createAppKit } from '@reown/appkit/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { cookieToInitialState, WagmiProvider, type Config } from 'wagmi'
 
 // 創建 QueryClient
 const queryClient = new QueryClient()
-
 
 // 設置元數據
 const metadata = {
