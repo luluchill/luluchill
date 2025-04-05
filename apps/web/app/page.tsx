@@ -20,7 +20,7 @@ export default function Home() {
         // redirect("/"); // 如果不是機構，重定向到首頁
       }
     } else {
-      redirect("/"); // 如果沒有連接錢包，重定向到首頁
+      // redirect("/"); // 如果沒有連接錢包，重定向到首頁
     }
   }, [currentAddress]);
 
