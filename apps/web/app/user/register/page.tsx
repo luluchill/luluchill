@@ -19,6 +19,7 @@ export default function UserRegistration() {
   const [isQrModalOpen, setIsQrModalOpen] = useState(false)
   const [formattedAddress, setFormattedAddress] = useState<string | null>(null)
   const [isEasIssued, setIsEasIssued] = useState(false)
+  const [easUid, setEasUid] = useState<string | null>(null)
   const chainId = useChainId()
 
   // Format the address when it changes
@@ -80,6 +81,7 @@ export default function UserRegistration() {
 
           if (data.attestationUid) {
             setIsEasIssued(true);
+            setEasUid(data.attestationUid);
           }
         } catch (error) {
           console.error("Error checking user existence:", error);
@@ -231,8 +233,38 @@ export default function UserRegistration() {
                   </CardHeader>
                   <h3 className="text-xl font-medium mb-2"></h3>
                   <p className="text-muted-foreground max-w-md">
-                    Your wallet has been successfully verified. You can now access all features.
+                    Your wallet has been successfully verified. You can now access all features. Your EAS UID is
                   </p>
+
+                  <span
+                    className="font-mono  p-1 rounded text-xs truncate max-w-[200px] md:max-w-[280px]"
+                    title={easUid!}
+                  >
+                    {easUid}
+                  </span>
+                  <button
+                    className="ml-2 text-gray-400 hover:text-gray-600 flex-shrink-0"
+                    onClick={() =>
+                      navigator.clipboard.writeText(
+                        easUid!,
+                      )
+                    }
+                  >
+                    <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-4 w-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 012 2v2m-6 12h8a2 2 002-2v-8a2 2 00-2-2h-8a2 2 00-2 2v8a2 2 002 2z"
+                    />
+                  </svg>
+                </button>
 
                   <div className="mt-8 w-full max-w-md p-4 border border-green-500/20 bg-green-500/5 rounded-lg flex items-center gap-3">
                     <CheckCircle2 className="h-5 w-5 text-green-500 flex-shrink-0" />
