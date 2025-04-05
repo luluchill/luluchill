@@ -20,10 +20,6 @@ type Property = {
   name: string
   abbr: string
   agency: string
-  location: {
-    county: string
-    township: string
-  }
   landArea: string
   landType: string
   contract: string
@@ -87,7 +83,7 @@ export default function RWAPlatform() {
 
 
   const { data: blockNumber } = useBlockNumber({ watch: true })
-  
+
   const connectWallet = () => {
     setWalletConnected(true)
   }
@@ -116,13 +112,9 @@ export default function RWAPlatform() {
   const properties = [
     {
       id: 1,
-      name: "Brand New Townhouse in Toufen",
+      name: "THE LULUCHILL RWA",
       abbr: "LULUCHILLRWA",
       agency: "LLCRWA",
-      location: {
-        county: 'Miaoli County',
-        township: 'Toufen Township',
-      },
       landArea: "38.78 Acre",
       landType: "Residential",
       contract: "0x3c01c27726BA247a708aB15C0A9430648202773E",
@@ -137,10 +129,6 @@ export default function RWAPlatform() {
       name: 'Dapu High-Rise Elevator Building',
       abbr: 'FPA-TCD',
       agency: 'FPA',
-      location: {
-        county: 'Taichung City',
-        township: 'Dali District',
-      },
       landArea: '14.22 Acre',
       landType: 'Commercial',
       contract: '0x9bC1169Ca09555bf2721A5C9eC6D69c8073bfeB4',
@@ -155,10 +143,6 @@ export default function RWAPlatform() {
       name: 'Large Land Area Detached House',
       abbr: 'TBP-TND',
       agency: 'TBP',
-      location: {
-        county: 'Taipei City',
-        township: 'Neihu District',
-      },
       landArea: '73.26 Acre',
       landType: 'Residential',
       contract: '0x3E5e9111Ae8eB78Fe1CC3bb8915d5D461F3Ef9A9',
@@ -173,10 +157,6 @@ export default function RWAPlatform() {
       name: 'Xinwu Square Agricultural Land',
       abbr: 'DAR-TXL',
       agency: 'DAR',
-      location: {
-        county: 'Taoyuan City',
-        township: 'Xinwu District',
-      },
       landArea: '120.45 Acre',
       landType: 'Agricultural',
       contract: '0x5FbDB2315678afecb367f032d93F642f64180aa3',
@@ -243,7 +223,7 @@ export default function RWAPlatform() {
       console.error("Invalid USDT amount");
       return;
     }
-  
+
     writeContract({
       ...poolContractConfig,
       functionName: "swap",
@@ -308,7 +288,7 @@ export default function RWAPlatform() {
             <p className="text-lg">
               RWA Token: <span className="font-bold">{formattedLuluchillRWATokenBalance?.toString() || "Loading..."}</span>
             </p>
-            
+
             {/* Approve USDC Section */}
             <div className="mt-4">
               <h3 className="text-base font-bold text-primary mb-2">Approve USDC</h3>
@@ -325,7 +305,7 @@ export default function RWAPlatform() {
           <p className="text-lg text-red-500">Please connect your wallet to view your USDC balance.</p>
         )}
       </div>
-      
+
       {/* Property Listings */}
       <div className="bg-secondary py-12">
         <div className="container mx-auto px-4">
@@ -347,7 +327,7 @@ export default function RWAPlatform() {
               >
                 <div className="relative">
                   <Image
-                    src="/placeholder.svg?height=200&width=400"
+                    src="/rwa.png"
                     alt={property.name}
                     width={400}
                     height={200}
@@ -356,7 +336,7 @@ export default function RWAPlatform() {
                   <div className="absolute top-3 left-3 bg-card bg-opacity-90 px-2 py-1 rounded-md text-sm text-primary flex items-center">
                     <div className="w-5 h-5 bg-accent rounded-full mr-2 flex items-center justify-center text-white text-xs">
                       <Image
-                        src="/placeholder.svg?height=20&width=20"
+                        src="/rwa.png"
                         alt={`${property.agency} Logo`}
                         width={20}
                         height={20}
@@ -367,18 +347,6 @@ export default function RWAPlatform() {
                   </div>
                 </div>
                 <div className="p-4">
-                  <div className="flex items-center mb-2 bg-secondary p-2 rounded-md">
-                    <MapPin className="h-4 w-4 text-primary mr-2" />
-                    <div>
-                      <span className="text-sm font-bold text-primary">
-                        {property.location.county}
-                      </span>
-                      <span className="text-sm text-primary mx-1">›</span>
-                      <span className="text-sm text-primary">
-                        {property.location.township}
-                      </span>
-                    </div>
-                  </div>
                   <h3 className="text-lg font-medium text-primary mb-1">
                     {property.name}{' '}
                     <span className="text-sm font-normal text-gray-500">
@@ -460,7 +428,7 @@ export default function RWAPlatform() {
               >
                 <div className="relative h-[250px] rounded-lg overflow-hidden">
                   <Image
-                    src="/placeholder.svg?height=300&width=600"
+                    src="/rwa.png"
                     alt={`${(selectedProperty as any).name} - Image ${currentSlide + 1}`}
                     fill
                     className="object-cover"
@@ -496,18 +464,6 @@ export default function RWAPlatform() {
                     </span>
                   </h2>
 
-                  <div className="flex items-center my-1 bg-secondary p-1.5 rounded-md">
-                    <MapPin className="h-3 w-3 text-primary mr-1" />
-                    <div>
-                      <span className="font-bold text-primary text-xs">
-                        {selectedProperty.location.county}
-                      </span>
-                      <span className="text-primary mx-1 text-xs">›</span>
-                      <span className="text-primary text-xs">
-                        {selectedProperty.location.township}
-                      </span>
-                    </div>
-                  </div>
 
                   <div className="grid grid-cols-2 gap-2 mb-2">
                     <div className="bg-secondary p-1.5 rounded-md">
@@ -580,9 +536,7 @@ export default function RWAPlatform() {
                       Description
                     </h3>
                     <p className="text-xs text-gray-600">
-                      This {selectedProperty.landType.toLowerCase()} property is
-                      located in {selectedProperty.location.township},{' '}
-                      {selectedProperty.location.county}. The property has been
+                      {selectedProperty.landType.toLowerCase()}. The property has been
                       tokenized into {selectedProperty.totalTokens} tokens, each
                       representing partial ownership. Investors can purchase
                       tokens to gain exposure to this real estate asset without
@@ -742,10 +696,10 @@ export default function RWAPlatform() {
                   </button>
                   <button className="py-1.5 px-3 bg-primary text-white hover:bg-primary/80 transition-colors rounded-md flex items-center justify-center text-sm"
                     onClick={handleSwap}>
-                    
+
                     <ShoppingCart className="h-3.5 w-3.5 mr-1" />
                     <span>Swap</span>
-                    
+
                   </button>
                 </div>
 
