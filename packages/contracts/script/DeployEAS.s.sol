@@ -11,19 +11,19 @@ contract DeployEASScript is Script {
         uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
         vm.startBroadcast(deployerPrivateKey);
 
-        // 部署 SchemaRegistry
+        // Deploy SchemaRegistry
         SchemaRegistry schemaRegistry = new SchemaRegistry();
         console.log("SchemaRegistry deployed at:", address(schemaRegistry));
 
-        // 部署 EAS
+        // Deploy EAS
         EAS eas = new EAS(schemaRegistry);
         console.log("EAS deployed at:", address(eas));
 
-        // 部署 Indexer
+        // Deploy Indexer
         Indexer indexer = new Indexer(eas);
         console.log("Indexer deployed at:", address(indexer));
 
-        // 印出合約地址摘要，便於記錄
+        // Print contract address summary for easy reference
         console.log("\n--- EAS deploy summary ---");
         console.log("SchemaRegistry:", address(schemaRegistry));
         console.log("EAS:", address(eas));
