@@ -14,10 +14,11 @@ export async function POST(request: Request) {
       );
     }
 
+    const userId = await getUserIdentifier(publicSignals);
+
     const configuredVerifier = new SelfBackendVerifier(
       "luluchill",
-      "https://under-blocking-illustration-atmosphere.trycloudflare.com",
-      // "https://luluchill.vecel.app",
+      "https://luluchill.vecel.app",
       "hex",
       true
     );
