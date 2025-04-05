@@ -1,9 +1,19 @@
+"use client"
 import { Button } from "@/components/ui/button"
 import { ConnectWalletButton } from "@/components/connect-wallet-button"
 import Link from "next/link"
 import { ArrowRight, Shield, Wallet, Building } from "lucide-react"
+import { redirect } from "next/navigation";
 
 export default function Home() {
+  const institutionAddress = "0x941AE41b7e08001c02C910f72CA465B07435903C";
+
+  // 假設從某處獲取當前地址
+  const currentAddress = "0x941AE41b7e08001c02C910f72CA465B07435903C";
+  if (currentAddress === institutionAddress) {
+    redirect("/institution/dashboard"); // 如果是機構，直接重定向到 dashboard
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-background/80">
       <header className="container mx-auto py-6 flex justify-between items-center">
@@ -26,13 +36,6 @@ export default function Home() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild size="lg" className="gap-2">
-              <Link href="/institution/register">
-                <Building className="h-5 w-5" />
-                Register as Institution
-                <ArrowRight className="h-4 w-4 ml-1" />
-              </Link>
-            </Button>
             <Button asChild size="lg" variant="outline" className="gap-2">
               <Link href="/user/register">
                 <Wallet className="h-5 w-5" />

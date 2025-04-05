@@ -1,0 +1,5 @@
+/* ...existing code... */
+.text-muted-foreground {
+  color: #6b7280; /* 調整為更深的灰色，例如 Tailwind 的 slate-600 */
+}
+/* ...existing code... */

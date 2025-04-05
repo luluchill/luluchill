@@ -109,5 +109,5 @@ export function useWallet() {
   if (context === undefined) {
     throw new Error('useWallet must be used within a WalletProvider')
   }
-  return context
+  return context as WalletContextType
 }
