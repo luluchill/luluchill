@@ -222,7 +222,7 @@ export default function UserRegistration() {
             </div>
             <p className="text-sm text-muted-foreground text-center mb-4">
               Don&#39;t have the Self Protocol app?{" "}
-              <a 
+              <a
                 href="https://self.xyz/"
                 className="text-primary hover:underline"
                 target="_blank"
@@ -237,4 +237,3 @@ export default function UserRegistration() {
     </div>
   )
 }
-

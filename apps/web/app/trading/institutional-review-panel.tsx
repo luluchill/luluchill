@@ -196,24 +196,24 @@ export default function RWAPlatform() {
   return (
     <div className="flex flex-col min-h-screen">
       {/* Navigation Bar */}
-      <header className="bg-[#2C2A25] text-white">
+      <header className="bg-primary text-white">
         <div className="container mx-auto flex items-center justify-between py-3 px-6">
           <div className="flex items-center">
-            <span className="text-2xl font-bold text-[#D4C19C] whitespace-nowrap">TOKENEST</span>
-            <span className="text-sm ml-2 text-[#D4C19C]">Real Estate Assets</span>
+            <span className="text-2xl font-bold text-accent whitespace-nowrap">TOKENEST</span>
+            <span className="text-sm ml-2 text-accent">Real Estate Assets</span>
           </div>
 
           {/* Simplified Navigation */}
           <div className="flex items-center space-x-4">
             {walletConnected ? (
-              <button className="flex items-center py-2 px-4 bg-[#D4C19C] text-[#2C2A25] hover:bg-[#C4B18B] transition-colors rounded-md">
+              <button className="flex items-center py-2 px-4 bg-accent text-primary hover:bg-accent-light transition-colors rounded-md">
                 <Wallet className="h-4 w-4 mr-2" />
                 <span>0x12...34AB</span>
               </button>
             ) : (
               <button
                 onClick={connectWallet}
-                className="flex items-center py-2 px-4 bg-[#D4C19C] text-[#2C2A25] hover:bg-[#C4B18B] transition-colors rounded-md"
+                className="flex items-center py-2 px-4 bg-accent text-primary hover:bg-accent-light transition-colors rounded-md"
               >
                 <Wallet className="h-4 w-4 mr-2" />
                 <span>Connect Wallet</span>
@@ -224,18 +224,18 @@ export default function RWAPlatform() {
       </header>
 
       {/* Property Listings */}
-      <div className="bg-[#F5F2EA] py-12">
+      <div className="bg-secondary py-12">
         <div className="container mx-auto px-4">
           <div className="mb-8">
-            <h2 className="text-3xl font-light text-[#2C2A25] uppercase">HOT PROPERTIES</h2>
-            <h3 className="text-2xl font-bold text-[#2C2A25]">Featured Listings</h3>
+            <h2 className="text-3xl font-light text-primary uppercase">HOT PROPERTIES</h2>
+            <h3 className="text-2xl font-bold text-primary">Featured Listings</h3>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {properties.map((property) => (
               <div
                 key={property.id}
-                className="bg-white rounded-lg overflow-hidden shadow-sm cursor-pointer hover:shadow-md transition-shadow"
+                className="bg-card rounded-lg overflow-hidden shadow-sm cursor-pointer hover:shadow-md transition-shadow"
                 onClick={() => openModal(property)}
               >
                 <div className="relative">
@@ -246,8 +246,8 @@ export default function RWAPlatform() {
                     height={200}
                     className="w-full h-[200px] object-cover"
                   />
-                  <div className="absolute top-3 left-3 bg-white bg-opacity-90 px-2 py-1 rounded-md text-sm text-[#2C2A25] flex items-center">
-                    <div className="w-5 h-5 bg-[#D4C19C] rounded-full mr-2 flex items-center justify-center text-white text-xs">
+                  <div className="absolute top-3 left-3 bg-card bg-opacity-90 px-2 py-1 rounded-md text-sm text-primary flex items-center">
+                    <div className="w-5 h-5 bg-accent rounded-full mr-2 flex items-center justify-center text-white text-xs">
                       <Image
                         src="/placeholder.svg?height=20&width=20"
                         alt={`${property.agency} Logo`}
@@ -260,15 +260,15 @@ export default function RWAPlatform() {
                   </div>
                 </div>
                 <div className="p-4">
-                  <div className="flex items-center mb-2 bg-[#F5F2EA] p-2 rounded-md">
-                    <MapPin className="h-4 w-4 text-[#2C2A25] mr-2" />
+                  <div className="flex items-center mb-2 bg-secondary p-2 rounded-md">
+                    <MapPin className="h-4 w-4 text-primary mr-2" />
                     <div>
-                      <span className="text-sm font-bold text-[#2C2A25]">{property.location.county}</span>
-                      <span className="text-sm text-[#2C2A25] mx-1">›</span>
-                      <span className="text-sm text-[#2C2A25]">{property.location.township}</span>
+                      <span className="text-sm font-bold text-primary">{property.location.county}</span>
+                      <span className="text-sm text-primary mx-1">›</span>
+                      <span className="text-sm text-primary">{property.location.township}</span>
                     </div>
                   </div>
-                  <h3 className="text-lg font-medium text-[#2C2A25] mb-1">
+                  <h3 className="text-lg font-medium text-primary mb-1">
                     {property.name} <span className="text-sm font-normal text-gray-500">({property.abbr})</span>
                   </h3>
                   <div className="text-sm text-gray-600 mb-3">
@@ -281,7 +281,7 @@ export default function RWAPlatform() {
                       <div className="text-xs text-gray-500">Token Price</div>
                       <div className="text-sm font-medium">{property.tokenPrice} USDT</div>
                       <div
-                        className={`flex items-center text-xs ${property.trending === "up" ? "text-green-600" : "text-red-600"}`}
+                        className={`flex items-center text-xs ${property.trending === "up" ? "text-success" : "text-danger"}`}
                       >
                         {property.trending === "up" ? (
                           <TrendingUp className="h-3 w-3 mr-1" />
@@ -297,11 +297,11 @@ export default function RWAPlatform() {
                     </div>
                     <div>
                       <div className="text-xs text-gray-500">Total Value</div>
-                      <div className="text-sm font-bold text-red-600">{property.totalValue} USDT</div>
+                      <div className="text-sm font-bold text-danger">{property.totalValue} USDT</div>
                     </div>
                   </div>
                   <div className="mt-3">
-                    <button className="w-full flex items-center justify-center py-2 px-4 bg-[#2C2A25] text-white hover:bg-[#3A382F] transition-colors rounded-md text-sm">
+                    <button className="w-full flex items-center justify-center py-2 px-4 bg-primary text-white hover:bg-primary-dark transition-colors rounded-md text-sm">
                       <ShoppingCart className="h-4 w-4 mr-2" />
                       <span>More Details</span>
                     </button>
@@ -317,7 +317,7 @@ export default function RWAPlatform() {
       {showModal && selectedProperty && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
           <div className="absolute inset-0 bg-black bg-opacity-70" onClick={closeModal}></div>
-          <div className="relative bg-white rounded-lg w-full max-w-5xl mx-4 flex flex-col max-h-[90vh] overflow-hidden">
+          <div className="relative bg-card rounded-lg w-full max-w-5xl mx-4 flex flex-col max-h-[90vh] overflow-hidden">
             <button onClick={closeModal} className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 z-10">
               <X className="h-5 w-5" />
             </button>
@@ -334,45 +334,45 @@ export default function RWAPlatform() {
                   />
                   <button
                     onClick={prevSlide}
-                    className="absolute left-2 top-1/2 -translate-y-1/2 bg-white bg-opacity-80 rounded-full p-1"
+                    className="absolute left-2 top-1/2 -translate-y-1/2 bg-opacity-80 rounded-full p-1"
                   >
-                    <ChevronLeft className="h-4 w-4 text-[#2C2A25]" />
+                    <ChevronLeft className="h-4 w-4 text-primary" />
                   </button>
                   <button
                     onClick={nextSlide}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 bg-white bg-opacity-80 rounded-full p-1"
+                    className="absolute right-2 top-1/2 -translate-y-1/2 bg-opacity-80 rounded-full p-1"
                   >
-                    <ChevronRight className="h-4 w-4 text-[#2C2A25]" />
+                    <ChevronRight className="h-4 w-4 text-primary" />
                   </button>
                   <div className="absolute bottom-2 left-0 right-0 flex justify-center space-x-1">
                     {[0, 1, 2, 3].map((index) => (
                       <button
                         key={index}
                         onClick={() => setCurrentSlide(index)}
-                        className={`w-1.5 h-1.5 rounded-full ${currentSlide === index ? "bg-[#D4C19C]" : "bg-white bg-opacity-50"}`}
+                        className={`w-1.5 h-1.5 rounded-full ${currentSlide === index ? "bg-accent" : "bg-opacity-50"}`}
                       ></button>
                     ))}
                   </div>
                 </div>
 
                 <div className="mt-2">
-                  <h2 className="text-lg font-bold text-[#2C2A25]">
+                  <h2 className="text-lg font-bold text-primary">
                     {(selectedProperty as any).name}{" "}
                     <span className="text-sm font-normal text-gray-500">({selectedProperty.abbr})</span>
                   </h2>
 
-                  <div className="flex items-center my-1 bg-[#F5F2EA] p-1.5 rounded-md">
-                    <MapPin className="h-3 w-3 text-[#2C2A25] mr-1" />
+                  <div className="flex items-center my-1 bg-secondary p-1.5 rounded-md">
+                    <MapPin className="h-3 w-3 text-primary mr-1" />
                     <div>
-                      <span className="font-bold text-[#2C2A25] text-xs">{selectedProperty.location.county}</span>
-                      <span className="text-[#2C2A25] mx-1 text-xs">›</span>
-                      <span className="text-[#2C2A25] text-xs">{selectedProperty.location.township}</span>
+                      <span className="font-bold text-primary text-xs">{selectedProperty.location.county}</span>
+                      <span className="text-primary mx-1 text-xs">›</span>
+                      <span className="text-primary text-xs">{selectedProperty.location.township}</span>
                     </div>
                   </div>
 
                   <div className="grid grid-cols-2 gap-2 mb-2">
-                    <div className="bg-[#F5F2EA] p-1.5 rounded-md">
-                      <h3 className="font-medium text-[#2C2A25] text-xs mb-0.5">Property Details</h3>
+                    <div className="bg-secondary p-1.5 rounded-md">
+                      <h3 className="font-medium text-primary text-xs mb-0.5">Property Details</h3>
                       <div className="text-xs">
                         <div className="flex justify-between py-0.5 border-b border-gray-200">
                           <span className="text-gray-600">Land Area:</span>
@@ -389,8 +389,8 @@ export default function RWAPlatform() {
                       </div>
                     </div>
 
-                    <div className="bg-[#F5F2EA] p-1.5 rounded-md">
-                      <h3 className="font-medium text-[#2C2A25] text-xs mb-0.5">Token Details</h3>
+                    <div className="bg-secondary p-1.5 rounded-md">
+                      <h3 className="font-medium text-primary text-xs mb-0.5">Token Details</h3>
                       <div className="text-xs">
                         <div className="flex justify-between py-0.5 border-b border-gray-200">
                           <span className="text-gray-600">Token Symbol:</span>
@@ -405,7 +405,7 @@ export default function RWAPlatform() {
                           <div className="flex items-center">
                             <span>{selectedProperty.tokenPrice} USDT</span>
                             <div
-                              className={`flex items-center text-xs ml-1 ${selectedProperty.trending === "up" ? "text-green-600" : "text-red-600"}`}
+                              className={`flex items-center text-xs ml-1 ${selectedProperty.trending === "up" ? "text-success" : "text-danger"}`}
                             >
                               {selectedProperty.trending === "up" ? (
                                 <TrendingUp className="h-2.5 w-2.5 mr-0.5" />
@@ -420,15 +420,15 @@ export default function RWAPlatform() {
                     </div>
                   </div>
 
-                  <div className="bg-[#F5F2EA] p-1.5 rounded-md mb-2">
-                    <h3 className="font-medium text-[#2C2A25] text-xs mb-0.5">Contract Address</h3>
-                    <div className="text-xs font-mono bg-white p-1 rounded overflow-hidden text-ellipsis">
+                  <div className="bg-secondary p-1.5 rounded-md mb-2">
+                    <h3 className="font-medium text-primary text-xs mb-0.5">Contract Address</h3>
+                    <div className="text-xs font-mono bg-card p-1 rounded overflow-hidden text-ellipsis">
                       {selectedProperty.contract}
                     </div>
                   </div>
 
-                  <div className="bg-[#F5F2EA] p-1.5 rounded-md">
-                    <h3 className="font-medium text-[#2C2A25] text-xs mb-0.5">Description</h3>
+                  <div className="bg-secondary p-1.5 rounded-md">
+                    <h3 className="font-medium text-primary text-xs mb-0.5">Description</h3>
                     <p className="text-xs text-gray-600">
                       This {selectedProperty.landType.toLowerCase()} property is located in{" "}
                       {selectedProperty.location.township}, {selectedProperty.location.county}. The property has been
@@ -441,18 +441,18 @@ export default function RWAPlatform() {
               </div>
 
               {/* Right Side - Uniswap-like Purchase Section - 2/5 width */}
-              <div className="bg-[#F5F2EA] p-2 rounded-lg flex flex-col col-span-2">
-                <h3 className="text-base font-bold text-[#2C2A25] mb-2">Swap Tokens</h3>
+              <div className="bg-secondary p-2 rounded-lg flex flex-col col-span-2">
+                <h3 className="text-base font-bold text-primary mb-2">Swap Tokens</h3>
 
                 {/* Uniswap-like Swap Interface */}
-                <div className="bg-white rounded-lg p-2 mb-2 flex-1">
+                <div className="bg-card rounded-lg p-2 mb-2 flex-1">
                   {/* From (USDT) */}
                   <div className="mb-1.5">
                     <div className="flex justify-between text-xs mb-0.5">
                       <span className="text-gray-500">From</span>
                       <span className="text-gray-500">Balance: 1,245.00 USDT</span>
                     </div>
-                    <div className="flex items-center bg-[#F5F2EA] p-2 rounded-lg">
+                    <div className="flex items-center bg-secondary p-2 rounded-lg">
                       <input
                         type="number"
                         value={usdtAmount}
@@ -464,7 +464,7 @@ export default function RWAPlatform() {
                         className="bg-transparent outline-none flex-1 text-base font-medium"
                         placeholder="0.0"
                       />
-                      <div className="flex items-center bg-white py-0.5 px-2 rounded-md ml-2">
+                      <div className="flex items-center bg-card py-0.5 px-2 rounded-md ml-2">
                         <Image
                           src="/placeholder.svg?height=16&width=16"
                           alt="USDT"
@@ -479,8 +479,8 @@ export default function RWAPlatform() {
 
                   {/* Swap Icon */}
                   <div className="flex justify-center my-1">
-                    <div className="bg-[#F5F2EA] p-1 rounded-full">
-                      <ArrowUpDown className="h-4 w-4 text-[#2C2A25]" />
+                    <div className="bg-secondary p-1 rounded-full">
+                      <ArrowUpDown className="h-4 w-4 text-primary" />
                     </div>
                   </div>
 
@@ -490,7 +490,7 @@ export default function RWAPlatform() {
                       <span className="text-gray-500">To</span>
                       <span className="text-gray-500">Balance: 0.00 {selectedProperty.abbr}</span>
                     </div>
-                    <div className="flex items-center bg-[#F5F2EA] p-2 rounded-lg">
+                    <div className="flex items-center bg-secondary p-2 rounded-lg">
                       <input
                         type="number"
                         value={tokenQuantity}
@@ -501,8 +501,8 @@ export default function RWAPlatform() {
                         className="bg-transparent outline-none flex-1 text-base font-medium"
                         placeholder="0.0"
                       />
-                      <div className="flex items-center bg-white py-0.5 px-2 rounded-md ml-2">
-                        <div className="w-4 h-4 bg-[#D4C19C] rounded-full mr-1 flex items-center justify-center text-white text-xs">
+                      <div className="flex items-center bg-card py-0.5 px-2 rounded-md ml-2">
+                        <div className="w-4 h-4 bg-accent rounded-full mr-1 flex items-center justify-center text-white text-xs">
                           <Image
                             src="/placeholder.svg?height=16&width=16"
                             alt={`${selectedProperty.agency} Logo`}
@@ -517,7 +517,7 @@ export default function RWAPlatform() {
                   </div>
 
                   {/* Price Info */}
-                  <div className="mt-2 bg-[#F5F2EA] p-1.5 rounded-lg">
+                  <div className="mt-2 bg-secondary p-1.5 rounded-lg">
                     <div className="flex justify-between text-xs">
                       <span className="text-gray-600">Price</span>
                       <span className="font-medium">
@@ -531,7 +531,7 @@ export default function RWAPlatform() {
                   </div>
 
                   {/* Liquidity Pool Info */}
-                  <div className="mt-1.5 bg-[#F5F2EA] p-1.5 rounded-lg">
+                  <div className="mt-1.5 bg-secondary p-1.5 rounded-lg">
                     <div className="flex justify-between text-xs">
                       <span className="text-gray-600">Liquidity Pool</span>
                       <span className="font-medium">{selectedProperty.abbr}/USDT</span>
@@ -562,7 +562,7 @@ export default function RWAPlatform() {
                     </div>
                     <div className="flex justify-between">
                       <span>Price impact</span>
-                      <span className="text-green-600">{"<"}0.01%</span>
+                      <span className="text-success">{"<"}0.01%</span>
                     </div>
                   </div>
                 </div>
@@ -571,11 +571,11 @@ export default function RWAPlatform() {
                 <div className="grid grid-cols-2 gap-2">
                   <button
                     onClick={closeModal}
-                    className="py-1.5 px-3 bg-white text-[#2C2A25] border border-[#D4C19C] hover:bg-[#F5F2EA] transition-colors rounded-md text-sm"
+                    className="py-1.5 px-3 text-primary border border-accent hover:bg-secondary transition-colors rounded-md text-sm"
                   >
                     Cancel
                   </button>
-                  <button className="py-1.5 px-3 bg-[#2C2A25] text-white hover:bg-[#3A382F] transition-colors rounded-md flex items-center justify-center text-sm">
+                  <button className="py-1.5 px-3 bg-primary text-white hover:bg-primary-dark transition-colors rounded-md flex items-center justify-center text-sm">
                     <ShoppingCart className="h-3.5 w-3.5 mr-1" />
                     <span>Swap</span>
                   </button>
@@ -583,15 +583,15 @@ export default function RWAPlatform() {
 
                 {/* Payment Methods */}
                 <div className="mt-2">
-                  <h4 className="font-medium text-[#2C2A25] text-xs mb-0.5">Payment Methods</h4>
+                  <h4 className="font-medium text-primary text-xs mb-0.5">Payment Methods</h4>
                   <div className="flex space-x-1.5">
-                    <div className="bg-white p-1 rounded border border-[#D4C19C]">
+                    <div className=" p-1 rounded border border-accent">
                       <Image src="/placeholder.svg?height=16&width=32" alt="USDT" width={32} height={16} />
                     </div>
-                    <div className="bg-white p-1 rounded border border-gray-200">
+                    <div className=" p-1 rounded border border-gray-200">
                       <Image src="/placeholder.svg?height=16&width=32" alt="ETH" width={32} height={16} />
                     </div>
-                    <div className="bg-white p-1 rounded border border-gray-200">
+                    <div className=" p-1 rounded border border-gray-200">
                       <Image src="/placeholder.svg?height=16&width=32" alt="BTC" width={32} height={16} />
                     </div>
                   </div>
@@ -600,11 +600,11 @@ export default function RWAPlatform() {
                 <div className="mt-1.5 text-[10px] text-gray-500">
                   <p>
                     By confirming your swap, you agree to our{" "}
-                    <a href="#" className="text-[#2C2A25] underline">
+                    <a href="#" className="text-primary underline">
                       Terms of Service
                     </a>{" "}
                     and acknowledge that you have read our{" "}
-                    <a href="#" className="text-[#2C2A25] underline">
+                    <a href="#" className="text-primary underline">
                       Privacy Policy
                     </a>
                     .
