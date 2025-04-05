@@ -49,16 +49,18 @@ export function SelfQrCodeComponent({ userId, onSuccess }: SelfQrCodeComponentPr
       return new SelfAppBuilder({
         appName: "LuLuChill",
         scope: "luluchill",
-        endpoint: "http://luluchill.kth.tw/api/self/verify",
+        endpoint: "http://luluchill.vercel.app/api/self/verify",
         endpointType: "staging_https",
         logoBase64:
           "https://upload.wikimedia.org/wikipedia/commons/f/f9/L_cursiva.gif",
         userIdType: "hex",
         userId: formattedUserId,
         disclosures: {
+          passportNumber: true,
           name: true,
           minimumAge: 18,
           nationality: true,
+          ofac: true,
         },
         devMode: true,
       } as Partial<SelfApp>).build()

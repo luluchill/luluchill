@@ -18,7 +18,7 @@ export async function POST(request: Request) {
 
     const configuredVerifier = new SelfBackendVerifier(
       "luluchill",
-      "https://luluchill.vecel.app",
+      "https://luluchill.vercel.app",
       "hex",
       true
     );
