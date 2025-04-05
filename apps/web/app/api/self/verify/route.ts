@@ -38,7 +38,8 @@ export async function POST(request: Request) {
           nationality: result.credentialSubject.nationality!,
           olderThan: result.credentialSubject.older_than!,
           passportNoOfac: result.credentialSubject.passport_no_ofac!,
-          attestationUid: null,
+          attestationUidPolygon: null,
+          attestationUidHashkey: null,
         },
       });
 

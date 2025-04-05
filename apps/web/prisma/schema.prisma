@@ -15,14 +15,15 @@ datasource db {
 }
 
 model User {
-  id             Int      @id @default(autoincrement())
-  createdAt      DateTime @default(now())
-  ethAddress     String   @unique
-  passportNumber String
-  firstName      String
-  lastName       String
-  olderThan      String
-  nationality    String
-  passportNoOfac Boolean
-  attestationUid String?
+  id                    Int      @id @default(autoincrement())
+  createdAt             DateTime @default(now())
+  ethAddress            String   @unique
+  passportNumber        String
+  firstName             String
+  lastName              String
+  olderThan             String
+  nationality           String
+  passportNoOfac        Boolean
+  attestationUidPolygon String?
+  attestationUidHashkey String?
 }
