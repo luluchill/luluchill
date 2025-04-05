@@ -47,11 +47,12 @@ export function SelfQrCodeComponent({ userId, onSuccess }: SelfQrCodeComponentPr
   const selfApp = React.useMemo(() => {
     try {
       return new SelfAppBuilder({
-        appName: "RWA Trading Platform",
-        scope: "rwa-platform",
-        endpoint: "https://under-blocking-illustration-atmosphere.trycloudflare.com/api/self/verify",
+        appName: "LuLuChill",
+        scope: "luluchill",
+        endpoint: "http://luluchill.kth.tw/api/self/verify",
         endpointType: "staging_https",
-        logoBase64: "https://upload.wikimedia.org/wikipedia/commons/f/f9/L_cursiva.gif",
+        logoBase64:
+          "https://upload.wikimedia.org/wikipedia/commons/f/f9/L_cursiva.gif",
         userIdType: "hex",
         userId: formattedUserId,
         disclosures: {

@@ -9,6 +9,7 @@ import { CheckCircle2, Clock, ArrowRight, Shield, AlertCircle } from "lucide-rea
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { SelfQrCodeComponent } from "@/components/self-qrcode-component"
+import Link from "next/link"
 
 export default function UserRegistration() {
   const { isConnected, address } = useWallet()
@@ -63,7 +64,7 @@ export default function UserRegistration() {
         <Shield className="h-4 w-4 text-primary" />
         <AlertTitle>Verification Required</AlertTitle>
         <AlertDescription>
-          To ensure regulatory compliance, you'll need to reveal limited personal information through Self Protocol.
+          To ensure regulatory compliance, you&#39;ll need to reveal limited personal information through Self Protocol.
           This information is securely verified without exposing your full identity.
         </AlertDescription>
       </Alert>
@@ -99,7 +100,9 @@ export default function UserRegistration() {
               <ConnectWalletButton />
             </CardContent>
             <CardFooter className="flex justify-between">
-              <div />
+              <Button variant="outline" asChild>
+                <Link href="/">Back</Link>
+              </Button>
               <Button onClick={() => setCurrentStep(2)} disabled={!isConnected} className="gap-2">
                 Next Step
                 <ArrowRight className="h-4 w-4" />
@@ -125,7 +128,7 @@ export default function UserRegistration() {
                 <ul className="space-y-2 text-sm">
                   <li className="flex items-center gap-2">
                     <CheckCircle2 className="h-4 w-4 text-green-500" />
-                    <span>Age (to confirm you're over 18)</span>
+                    <span>Age (to confirm you&#39;re over 18)</span>
                   </li>
                   <li className="flex items-center gap-2">
                     <CheckCircle2 className="h-4 w-4 text-green-500" />
@@ -218,7 +221,7 @@ export default function UserRegistration() {
               />
             </div>
             <p className="text-sm text-muted-foreground text-center mb-4">
-              Don't have the Self Protocol app?{" "}
+              Don&#39;t have the Self Protocol app?{" "}
               <a 
                 href="https://self.xyz/"
                 className="text-primary hover:underline"
@@ -229,7 +232,7 @@ export default function UserRegistration() {
               </a>
             </p>
             <Button onClick={handleQrScanned} className="w-full">
-              I've Completed Verification
+              I&#39;ve Completed Verification
             </Button>
           </div>
         </DialogContent>
