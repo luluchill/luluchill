@@ -227,7 +227,7 @@ export default function RWAPlatform() {
       ...poolContractConfig(chainId),
       functionName: "swap",
       args: [
-        '0xd737545bE0FFcC4e3ACE1A9E664cA05e58F046f9' as `0x${string}`,
+        usdcContractConfig(chainId).address as `0x${string}`,
         ethers.parseUnits(usdtAmount.toString(), 6), // 使用動態計算的 USDC 數量
       ],
     });
@@ -252,7 +252,7 @@ export default function RWAPlatform() {
   useEffect(() => {
     const fetchAttestationUID = async () => {
       if (!address) return;
-  
+
       try {
 
 
@@ -275,9 +275,9 @@ export default function RWAPlatform() {
             'Content-Type': 'application/json',
           },
         });
-  
+
         const data = await response.json();
-  
+
         if (data.attestationUid) {
           setAttestationUID(data.attestationUid);
         }
@@ -285,7 +285,7 @@ export default function RWAPlatform() {
         console.error("Error fetching attestation UID:", error);
       }
     };
-  
+
     fetchAttestationUID();
   }, [address]);
 
