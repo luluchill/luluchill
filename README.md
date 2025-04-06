@@ -3,25 +3,27 @@
 
 <p>Restricted Asset Tokenization and Liquidity Platform based on EAS (Ethereum Attestation Service)</p>
 
+<img src="image (1).jpg" width="50%" height="50%"></img>
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
 </div>
 
 ### Demo Page
 
-- Website: [luluchill.io](https://luluchill.vercel.app/)
+- Website: [luluchill](https://luluchill.vercel.app/)
 - HashKey Chain Testnet Deployment Addresses:
-  - SchemaRegistry: 0xb06FC9c63F6eB2b28B1C7EE102B4E73A47faC338
-  - EAS: 0xAED1888Ab6691e86463656C586A3A4F77977C39d
-  - Restricted Token: 0xd4f68460516f0Cb8FeE57b4Ac979CCc0E24352bE
-  - Liquidity Pool: 0xEecDfdaeaD90f064d1Ca3A7D91F58A31a7005d99
-  - MockUSDC: 0xe6FEe3091C72E5D63b943c0E813154768d187476
+  - SchemaRegistry: [0xb06FC9c63F6eB2b28B1C7EE102B4E73A47faC338](https://hashkeychain-testnet-explorer.alt.technology/address/0xb06FC9c63F6eB2b28B1C7EE102B4E73A47faC338)
+  - EAS: [0xAED1888Ab6691e86463656C586A3A4F77977C39d](https://hashkeychain-testnet-explorer.alt.technology/address/0xAED1888Ab6691e86463656C586A3A4F77977C39d)
+  - Restricted Token: [0xd4f68460516f0Cb8FeE57b4Ac979CCc0E24352bE](https://hashkeychain-testnet-explorer.alt.technology/address/0xd4f68460516f0Cb8FeE57b4Ac979CCc0E24352bE)
+  - Liquidity Pool: [0xEecDfdaeaD90f064d1Ca3A7D91F58A31a7005d99](https://hashkeychain-testnet-explorer.alt.technology/address/0xEecDfdaeaD90f064d1Ca3A7D91F58A31a7005d99)
+  - MockUSDC: [0xe6FEe3091C72E5D63b943c0E813154768d187476](https://hashkeychain-testnet-explorer.alt.technology/address/0xe6FEe3091C72E5D63b943c0E813154768d187476)
   
 - Polygon Amoy Deployment Addresses:
-  - SchemaRegistry: 0x23c5701A1BDa89C61d181BD79E5203c730708AE7
-  - EAS: 0xb101275a60d8bfb14529C421899aD7CA1Ae5B5Fc
-  - Restricted Token: 0xA44282BC7bFB5e65732FeA13d353C3182f59af33
-  - Liquidity Pool: 0x0775495b3A78055eA69ddDB4963F800fe442E8fc
-  - MockUSDC: 0xd737545bE0FFcC4e3ACE1A9E664cA05e58F046f9
+  - SchemaRegistry: [0x23c5701A1BDa89C61d181BD79E5203c730708AE7](https://amoy.polygonscan.com/address/0x23c5701A1BDa89C61d181BD79E5203c730708AE7)
+  - EAS: [0xb101275a60d8bfb14529C421899aD7CA1Ae5B5Fc](https://amoy.polygonscan.com/address/0xb101275a60d8bfb14529C421899aD7CA1Ae5B5Fc)
+  - Restricted Token: [0xA44282BC7bFB5e65732FeA13d353C3182f59af33](https://amoy.polygonscan.com/address/0xA44282BC7bFB5e65732FeA13d353C3182f59af33)
+  - Liquidity Pool: [0x0775495b3A78055eA69ddDB4963F800fe442E8fc](https://amoy.polygonscan.com/address/0x0775495b3A78055eA69ddDB4963F800fe442E8fc)
+  - MockUSDC: [0xd737545bE0FFcC4e3ACE1A9E664cA05e58F046f9](https://amoy.polygonscan.com/address/0xd737545bE0FFcC4e3ACE1A9E664cA05e58F046f9)
 
 ### Abstract
 
