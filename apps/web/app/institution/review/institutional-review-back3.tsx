@@ -17,7 +17,7 @@ import {
   RefreshCw,
 } from 'lucide-react'
 import { EAS, SchemaEncoder } from '@ethereum-attestation-service/eas-sdk'
-const easContractAddress = '0xb101275a60d8bfb14529C421899aD7CA1Ae5B5Fc'
+
 const schemaUID =
   '0x66ceb27660877e18c3ed91f55b7a5aa9ba4d54aeb75c8a94a6df90aca219c4ca'
 import { useEthersSigner } from '../../../walletconnect-config' // 使用自定義的 signer hook
@@ -50,6 +50,10 @@ export default function InstitutionalReviewBack() {
   const router = useRouter()
   const institutionAddress = '0x941AE41b7e08001c02C910f72CA465B07435903C'
 
+  const easContractAddress = useChainId() !== 80002
+    ? '0xAED1888Ab6691e86463656C586A3A4F77977C39d'
+    : '0xb101275a60d8bfb14529C421899aD7CA1Ae5B5Fc'
+  
   const callAttestApi = async (
     userId: number,
     attestationUid: string,
